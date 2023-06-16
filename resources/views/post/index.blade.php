@@ -15,7 +15,7 @@
         <div class="mt-4 p-8 bg-white w-full rounded-2xl">
           {{-- ここに画像を表示 --}}
           {{-- <img src="{{'/storage'. $post{'image'}}}" /> --}}
-          <img src="{{ asset('storage/' .$post->image) }}" >
+          <img src="{{ Storage::url($post->image) }}" >
           <h1 class="p-4 text-lg font-semibold">
             件名：
             <a href="{{route('post.show', $post)}}" class="text-blue-600">

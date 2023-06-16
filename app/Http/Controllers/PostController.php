@@ -15,7 +15,7 @@ class PostController extends Controller
     {
         //
     }
-    
+
     public function index()
     {
         //ここで初めて$postsを定義
@@ -47,9 +47,9 @@ class PostController extends Controller
             'content' => 'required | max:400',
             'image' => 'nullable | max:1024 | mimes:jpg,jpeg,png,gif',
         ]);
-        
+
         $image = $request->file('image');
-        
+
         //画像がアップロードされていればstrageに保存
         if ($request->hasFile('image')) {
             // 現在の年月日を取得してYmdフォーマットに変換
@@ -57,13 +57,13 @@ class PostController extends Controller
             // Get the original file name and append the current date and time
             $filename = $currentDateTime.'_'.$request->file('image')->getClientOriginalName();
             // Store the image with the new file name
-            $path = $request->file('image')->storeAs('public/image', $filename);
+            $path = $request->file('image')->storePubliclyAs('images', $filename);
             // Update the 'image' attribute in the validated data
             $validated['image'] = $path;
         } else {
             $path = null;
         }
-        
+
         $validated['user_id'] = auth()->id();
 
         $post = Post::create($validated);
@@ -71,7 +71,7 @@ class PostController extends Controller
         return back()->with('message', '投稿を保存しました！');
     }
 
-    
+
 
     /**
      * Display the specified resource.
@@ -99,15 +99,15 @@ class PostController extends Controller
             'title' => 'required | max:20',
             'content' => 'required | max:400',
         ]);
-        
+
         $validated['user_id'] = auth()->id();
-        
+
         $post->update($validated);
 
         $request->session()->flash('message', '保存しました！');
         return back();
     }
-    
+
     /**
      * Remove the specified resource from storage.
      */
