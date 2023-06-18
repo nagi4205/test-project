@@ -33,6 +33,7 @@
 
             <div class="w-full flex flex-col">
                 <label for="image" class="font-semibold mt-4">画像登録</label>
+                <x-input-error :messages="$errors->get('image')" class="mt-2" />
                 <input type="file" class="form-control-file" name="image" id="image" >
             </div>
 

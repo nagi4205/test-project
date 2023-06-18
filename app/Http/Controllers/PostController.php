@@ -45,7 +45,7 @@ class PostController extends Controller
         $validated = $request->validate([
             'title' => 'required | max:20',
             'content' => 'required | max:400',
-            'image' => 'nullable | max:2048 | mimes:jpg,jpeg,png,gif',
+            'image' => 'required | nullable | max:2048 | mimes:jpg,jpeg,png,gif',
         ]);
 
         $image = $request->file('image');
