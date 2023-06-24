@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Post;
 
@@ -23,8 +24,9 @@ class PostController extends Controller
         //EloquentORMを使って条件にあったデータを抽出する方法。where句を使う。
         //モデル名：：where('条件をつけるカラム', ’条件’)->get(); じゅんこ本P.228
         // $posts=Post::where('user_id', auth()->id())->get();
-        $posts=Post::where('user_id', auth()->id())->paginate(10);
-        //$posts=Post::paginate(20);
+        // ページネーションバージョン↓
+        // $posts=Post::where('user_id', auth()->id())->paginate(10);
+        $posts=Post::paginate(15);
         //compact関数で変数$postsを受け渡す
         return view('post.index', compact('posts'));
     }
@@ -76,10 +78,10 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(Post $post)
     {
-        $post=Post::find($id);
-        return view('post.show', compact('post'));
+        $comments = $post->comments;
+        return view('post.show', compact('post', 'comments'));
     }
 
     /**
@@ -104,7 +106,7 @@ class PostController extends Controller
 
         $post->update($validated);
 
-        $request->session()->flash('message', '保存しました！');
+        $request->session()->flash('message', '更新しました！');
         return back();
     }
 
@@ -113,8 +115,12 @@ class PostController extends Controller
      */
     public function destroy(Request $request, Post $post)
     {
-        $post->delete();
-        $request->session()->flash('message', '削除しました！');
+        DB::transaction(function () use ($request, $post) {
+            $post->comments()->delete();
+            $post->delete();
+            $request->session()->flash('message', '削除しました！');
+        });
+    
         return redirect()->route('post.index');
     }
 
