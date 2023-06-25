@@ -13,6 +13,8 @@ class Post extends Model
         'title',
         'content',
         'image',
+        'latitude',
+        'longitude',
         'user_id',
     ];
 

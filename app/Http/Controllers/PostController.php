@@ -44,11 +44,12 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
         $validated = $request->validate([
             'title' => 'required | max:20',
             'content' => 'required | max:400',
             'image' => 'nullable | max:2048 | mimes:jpg,jpeg,png,gif',
+            'latitude' => 'nullable | numeric',
+            'longitude' => 'nullable | numeric',
         ]);
 
         $image = $request->file('image');
