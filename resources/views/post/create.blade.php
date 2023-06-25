@@ -36,10 +36,18 @@
                 <input type="file" class="form-control-file" name="image" id="image" >
             </div>
 
+            {{-- 位置情報をコントローラに渡す --}}
+            <input type="hidden" id="latitude" name="latitude">
+            <input type="hidden" id="longitude" name="longitude">
+
             <x-primary-button class="mt-8 hover:opacity-75">
                 送信する
             </x-primary-button>
         </form>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <script src="{{ asset('/js/setLocation.js') }}"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyDLm3FiiHj5SL12ki1Nigf2P9i9irwpXZU&callback=initMap" async defer></script>
     </div>
     
 </x-app-layout>

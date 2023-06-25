@@ -89,7 +89,3 @@ class CommentController extends Controller
         return redirect()->route('post.index');
     }
 }
-    // Route::get('post/comment/show/{post}', [CommentController::class, 'show'])->name('Comment.show');
-    // Route::get('post/comment/{post}/edit', [CommentController::class, 'edit'])->name('Comment.edit');
-    // Route::patch('post/comment/{post}', [CommentController::class, 'update'])->name('Comment.update');
-    // Route::delete('post/comment/{post}', [CommentController::class, 'destroy'])->name('Comment.destroy');

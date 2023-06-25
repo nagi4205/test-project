@@ -7,10 +7,11 @@ function setLocation(pos) {
   console.log(lat);
   console.log(lng);
 
-  // welcomeの中からlat_inputのclassを見つけて、そのvalueに、定数latを代入
-  $(".lat_input").val(lat);
-  //welcomeの中からlng_inputのclassを見つけて、そのvalueに、定数lngを代入
-  $(".lng_input").val(lng);
+  // post.searchの中からlat_inputのclassを見つけて、そのvalueに、定数latを代入
+  // post.createにlat,lngデータをコントローラに渡すため、".lat_input"を"#latitude"に変更
+  $("#latitude").val(lat);
+  // post.searchの中からlng_inputのclassを見つけて、そのvalueに、定数lngを代入
+  $("#longitude").val(lng);
 }
 
 // エラー時に呼び出される関数
@@ -42,4 +43,4 @@ if ("geolocation" in navigator) {
   alert("ブラウザが位置情報取得に対応していません");
 }
 
-$('.btn').prop('disabled', false)
+// $('.btn').prop('disabled', false) post.searchのボタンを押せるようになる
