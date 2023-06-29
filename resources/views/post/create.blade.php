@@ -46,8 +46,8 @@
         </form>
 
         <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-        <script src="{{ asset('/js/setLocation.js') }}"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyDLm3FiiHj5SL12ki1Nigf2P9i9irwpXZU&callback=initMap" async defer></script>
+        <script src="{{ asset('/js/setLocation2.js') }}"></script>
+        {{-- マップを表示させるためのAPI　<script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyDLm3FiiHj5SL12ki1Nigf2P9i9irwpXZU&callback=initMap" async defer></script> --}}
     </div>
     
 </x-app-layout>

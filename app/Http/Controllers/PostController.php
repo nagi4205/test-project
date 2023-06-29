@@ -17,17 +17,30 @@ class PostController extends Controller
         //
     }
 
-    public function index()
+    // public function index()
+    // {
+    //     //ここで初めて$postsを定義
+    //     //postsテーブルのデータを取得
+    //     //EloquentORMを使って条件にあったデータを抽出する方法。where句を使う。
+    //     //モデル名：：where('条件をつけるカラム', ’条件’)->get(); じゅんこ本P.228
+    //     // $posts=Post::where('user_id', auth()->id())->get();
+    //     // ページネーションバージョン↓
+    //     // $posts=Post::where('user_id', auth()->id())->paginate(10);
+    //     $posts=Post::paginate(15);
+    //     //compact関数で変数$postsを受け渡す
+    //     return view('post.index', compact('posts'));
+    // }
+
+    // PostsController.php (コントローラ)
+    public function index(Request $request)
     {
-        //ここで初めて$postsを定義
-        //postsテーブルのデータを取得
-        //EloquentORMを使って条件にあったデータを抽出する方法。where句を使う。
-        //モデル名：：where('条件をつけるカラム', ’条件’)->get(); じゅんこ本P.228
-        // $posts=Post::where('user_id', auth()->id())->get();
-        // ページネーションバージョン↓
-        // $posts=Post::where('user_id', auth()->id())->paginate(10);
-        $posts=Post::paginate(15);
-        //compact関数で変数$postsを受け渡す
+        if($request->has(['latitude', 'longitude'])) {
+            $lat = $request->latitude;
+            $lng = $request->longitude;
+            $posts = Post::withinDistance($lat, $lng)->get();
+        } else {
+            $posts = Post::all(); // or any default set of posts
+        }
         return view('post.index', compact('posts'));
     }
 

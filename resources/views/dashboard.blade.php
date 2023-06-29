@@ -14,4 +14,17 @@
             </div>
         </div>
     </div>
+
+    {{-- setLocation.jsファイル内のリダイレクトのロジックによってactionとmethodmethodを補完している。 --}}
+    {{-- <form method="get" action="{{ route('post.index') }}"> --}}
+        <div class="flex justify-center items-center h-screen">
+            {{-- idを追加 --}}
+            <x-primary-button id="home-button" class="mt-4 hover:opacity-75">
+                一覧表示
+            </x-primary-button>
+        </div>
+    {{-- </form> --}}
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="{{ asset('/js/setLocation.js') }}"></script>
 </x-app-layout>
