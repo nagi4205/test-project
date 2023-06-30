@@ -32,6 +32,6 @@
                 {{ $slot }}
             </main>
         </div>
-        <script src="./assets/vendor/preline/dist/preline.js"></script>
+        {{-- <script src="./assets/vendor/preline/dist/preline.js"></script> --}}
     </body>
 </html>

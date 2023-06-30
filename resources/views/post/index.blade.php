@@ -14,8 +14,9 @@
       @foreach($posts as $post)
         <div class="mt-4 p-8 bg-white w-full rounded-2xl">
           {{-- ここに画像を表示 --}}
-          {{-- <img src="{{'/storage'. $post{'image'}}}" /> --}}
-          <img src="{{ Storage::url($post->image) }}" >
+          @isset($post->image)
+            <img src="{{ Storage::url($post->image) }}" >
+          @endisset
           <h1 class="p-4 text-lg font-semibold">
             件名：
             <a href="{{route('post.show', $post)}}" class="text-blue-600">
@@ -34,8 +35,8 @@
           </div>
         </div>
       @endforeach
-      <div class="mb-4">
+      {{-- <div class="mb-4">
         {{ $posts->links() }}
-      </div>
+      </div> --}}
   </div>
 </x-app-layout>

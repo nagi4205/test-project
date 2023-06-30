@@ -13,10 +13,26 @@ class Post extends Model
         'title',
         'content',
         'image',
+        'latitude',
+        'longitude',
         'user_id',
     ];
 
     public function user() {
-        return $this->belongsto(User::class);
+        return $this->belongsTo(User::class);
+    }
+
+    public function comments() {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function scopeWithinDistance($query, $lat, $lng, $radius = 3) {
+    $query->whereRaw("
+        ( 6371 * acos( cos( radians(?) ) *
+          cos( radians( latitude ) )
+          * cos( radians( longitude ) - radians(?)
+          ) + sin( radians(?) ) *
+          sin( radians( latitude ) ) )
+        ) <= ?", [$lat, $lng, $lat, $radius]);
     }
 }
