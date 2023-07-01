@@ -15,6 +15,15 @@
         
         <form method="post" action="{{ route('post.store') }}" enctype="multipart/form-data">
             @csrf
+            <div class="w-full flex flex-col">
+                <label for="tag" class="font-semibold mt-4">タグ</label>
+                <select name="tag" id="tag">
+                    @foreach($tags as $tag)
+                        <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
             <div class="mt-8">
                 <div class="w-full flex flex-col">
                     <label for="title" class="font-semibold mt-4">件名</label>

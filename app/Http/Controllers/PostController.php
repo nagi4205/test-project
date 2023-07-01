@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Post;
+use App\Models\Tag;
 
 class PostController extends Controller
 {
@@ -49,7 +50,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('post.create');
+        $tags = Tag::all();
+        return view('post.create', compact('tags'));
     }
 
     /**
@@ -63,6 +65,7 @@ class PostController extends Controller
             'image' => 'nullable | max:2048 | mimes:jpg,jpeg,png,gif',
             'latitude' => 'nullable | numeric',
             'longitude' => 'nullable | numeric',
+            'tag' => 'required | exists:tags,id',
         ]);
 
         $image = $request->file('image');
@@ -84,6 +87,7 @@ class PostController extends Controller
         $validated['user_id'] = auth()->id();
 
         $post = Post::create($validated);
+        $post->tags()->attach($request->tag);  
 
         return back()->with('message', '投稿を保存しました！');
     }

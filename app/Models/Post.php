@@ -26,6 +26,10 @@ class Post extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function tags() {
+        return $this->belongsToMany(Tag::class, 'post_tags');
+    }
+
     public function scopeWithinDistance($query, $lat, $lng, $radius = 3) {
     $query->whereRaw("
         ( 6371 * acos( cos( radians(?) ) *
