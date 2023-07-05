@@ -3,8 +3,14 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
-
+// あとでけす
+use App\Models\User;
+// use App\Notifications\AttendanceConfirmation;
+// use Illuminate\Notifications\Notification;
+use App\Notifications\AttendanceComfirmNotification;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,7 +35,27 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// あとで消す
+Route::get('/test-notification', function () {
+    $user = User::find(1);
+    $user->notify(new AttendanceComfirmNotification());
 
+    return 'Notification sent!';
+});
+// あとで消す
+Route::get('/test-notifications', function (){
+    $users = User::all();
+    foreach ($users as $user) {
+        $user->notify(new AttendanceComfirmNotification);
+    }
+
+    return 'Notification Sent';
+});
+
+//構文テスト用
+Route::get('test', [TestController::class, 'test']);
+
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notification.notifications');
 
 //リソースコントローラの導入のためコメントアウト
 //投稿処理のルーティング
