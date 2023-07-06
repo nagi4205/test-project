@@ -29,30 +29,31 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-
+Route::resource('post', PostController::class);
+Route::resource('post.comment', CommentController::class);
 
 //リソースコントローラの導入のためコメントアウト
 //投稿処理のルーティング
-Route::get('post/create', [PostController::class, 'create'])->middleware(['auth'])->name('post.create');
-Route::post('post', [PostController::class, 'store'])->name('post.store');
-Route::get('post', [PostController::class, 'index'])->name('post.index');
-//個別表示のルーティングP.265
-Route::get('post/{post}/show', [PostController::class, 'show'])->name('post.show');
-Route::get('post/{post}/edit', [PostController::class, 'edit'])->name('post.edit');
-Route::patch('post/{post}', [PostController::class, 'update'])->name('post.update');
-Route::delete('post/{post}', [PostController::class, 'destroy'])->name('post.destroy');
+// Route::get('post/create', [PostController::class, 'create'])->middleware(['auth'])->name('post.create');
+// Route::post('post', [PostController::class, 'store'])->name('post.store');
+// Route::get('post', [PostController::class, 'index'])->name('post.index');
+// //個別表示のルーティングP.265
+// Route::get('post/{post}/show', [PostController::class, 'show'])->name('post.show');
+// Route::get('post/{post}/edit', [PostController::class, 'edit'])->name('post.edit');
+// Route::patch('post/{post}', [PostController::class, 'update'])->name('post.update');
+// Route::delete('post/{post}', [PostController::class, 'destroy'])->name('post.destroy');
 
-//検索画面のルーティング
-Route::get('post/search', [PostController::class, 'search'])->name('post.search');
+// //検索画面のルーティング
+// Route::get('post/search', [PostController::class, 'search'])->name('post.search');
 
 //コメントCRUDのルーティング
 // ある投稿に対するコメント作成画面↓
-Route::get('post/{post}/comment/create', [CommentController::class, 'create'])->name('comment.create');
-Route::post('post/{post}/comment', [CommentController::class, 'store'])->name('comment.store');
-Route::get('post/{post}/comment/{comment}/show', [CommentController::class, 'show'])->name('comment.show');
-Route::get('post/{post}/comment/{comment}/edit', [CommentController::class, 'edit'])->name('comment.edit');
-Route::patch('post/{post}/comment/{comment}', [CommentController::class, 'update'])->name('comment.update');
-Route::delete('post/{post}/comment/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
+// Route::get('post/{post}/comment/create', [CommentController::class, 'create'])->name('comment.create');
+// Route::post('post/{post}/comment', [CommentController::class, 'store'])->name('comment.store');
+// Route::get('post/{post}/comment/{comment}/show', [CommentController::class, 'show'])->name('comment.show');
+// Route::get('post/{post}/comment/{comment}/edit', [CommentController::class, 'edit'])->name('comment.edit');
+// Route::patch('post/{post}/comment/{comment}', [CommentController::class, 'update'])->name('comment.update');
+// Route::delete('post/{post}/comment/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
 
 
 

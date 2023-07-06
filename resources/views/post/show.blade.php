@@ -33,7 +33,7 @@
                         </x-primary-button>
                     </form>
 
-                    <a href="{{ route('comment.create', $post) }}" class="flex-3">
+                    <a href="{{ route('post.comment.create', $post) }}" class="flex-3">
                         <x-primary-button class="ml-2">
                             コメントする
                         </x-primary-button>
@@ -65,12 +65,12 @@
                         {{ $comment->title }}
                     </h1>
                     <div class="text-right flex">
-                        <a href="{{route('comment.edit', ['post' => $post->id, 'comment' => $comment->id])}}" class="flex-1">
+                        <a href="{{route('post.comment.edit', ['post' => $post->id, 'comment' => $comment->id])}}" class="flex-1">
                             <x-primary-button>
                                 編集
                             </x-primary-button>
                         </a>
-                        <form method="post" action="{{route('comment.destroy', ['post' => $post->id, 'comment' => $comment->id])}}" class="flex-2">
+                        <form method="post" action="{{route('post.comment.destroy', ['post' => $post->id, 'comment' => $comment->id])}}" class="flex-2">
                             @csrf
                             @method('delete')
                             <x-primary-button class="bg-red-700 ml-2">
