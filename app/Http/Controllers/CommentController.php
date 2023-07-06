@@ -47,10 +47,10 @@ class CommentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post,Comment $comment)
-    {
-        return view('comment.show', compact('post', 'comment'));
-    }
+    // public function show(Post $post,Comment $comment)
+    // {
+    //     return view('comment.show', compact('post', 'comment'));
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -74,7 +74,7 @@ class CommentController extends Controller
         $comment->update($validated);
 
         $request->session()->flash('message', '更新しました！');
-        return back();
+        return redirect()->route('post.show', ['post' => $post->id]);
     }
 
     /**
