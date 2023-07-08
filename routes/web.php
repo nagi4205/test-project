@@ -5,6 +5,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NotificationResponseController;
 use Illuminate\Support\Facades\Route;
 // あとでけす
 use App\Models\User;
@@ -55,7 +56,7 @@ Route::get('/test-notifications', function (){
 //構文テスト用
 Route::get('test', [TestController::class, 'test']);
 
-Route::get('/notifications', [NotificationController::class, 'index'])->name('notification.notifications');
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notification.index');
 
 //リソースコントローラの導入のためコメントアウト
 //投稿処理のルーティング
@@ -81,8 +82,10 @@ Route::patch('post/{post}/comment/{comment}', [CommentController::class, 'update
 Route::delete('post/{post}/comment/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
 
 
+// routes/web.php
 
-
+Route::post('notification/{notification}/response', [NotificationResponseController::class, 'store'])->name('notification.response.store');
+Route::get('notification/count', [PostController::class, 'count'])->name('notificaiton.count');
 
 //APIの埋め込み画面表示用のルーティング
 Route::get('post/api', [PostController::class, 'api'])->name('post.api');

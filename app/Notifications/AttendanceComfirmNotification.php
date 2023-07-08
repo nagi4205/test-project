@@ -12,6 +12,8 @@ class AttendanceComfirmNotification extends Notification
 {
     use Queueable;
 
+    public $incrementing = true;
+    protected $keyType = 'int';
     /**
      * Create a new notification instance.
      */
@@ -35,7 +37,6 @@ class AttendanceComfirmNotification extends Notification
     {
         return [
             'content' => '出勤しましたか？',
-            'status' => null,
         ];
     }
 
