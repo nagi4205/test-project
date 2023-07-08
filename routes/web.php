@@ -32,9 +32,16 @@ Route::get('/', function () {
 //↑middlewareを使ってログインしないとwelcome.blade.phpを表示できないようにする
 //middleware('guest')にすると非ログイン状態でないと表示できないようになる
 
+// Route::middleware(['auth', 'redirect.if.unread.notifications'])->group(function () {
+//     // ここに、認証後に適用されるルートを記述します
+//     Route::get('/dashboard', function () {
+//         return view('dashboard');
+//     });
+// });
+
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'redirect.if.unread.notifications'])->name('dashboard');
 
 // あとで消す
 Route::get('/test-notification', function () {
@@ -56,7 +63,7 @@ Route::get('/test-notifications', function (){
 //構文テスト用
 Route::get('test', [TestController::class, 'test']);
 
-Route::get('/notifications', [NotificationController::class, 'index'])->name('notification.index');
+Route::get('/notification', [NotificationController::class, 'index'])->name('notification.index');
 
 //リソースコントローラの導入のためコメントアウト
 //投稿処理のルーティング

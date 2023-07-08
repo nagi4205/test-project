@@ -21,9 +21,16 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             $users = User::all();
             foreach ($users as $user) {
+                // unreadNotification all unread notifications
+                if($user->unreadNotifications->isNotEmpty()) {
+                    foreach($user->unreadNotifications as $notification) {
+                        $notification->markAsRead();
+                    }
+                }
+                // new notification
                 $user->notify(new AttendanceComfirmNotification);
             }
-        })->everyFiveMinutes();
+        })->everyMinute();
     }
 
     /**

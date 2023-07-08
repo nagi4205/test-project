@@ -18,8 +18,8 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     // ↓デフォルトではログイン後dashboardに遷移するようになっている。
-    // public const HOME = '/dashboard';
-    public const HOME = '/post';
+    public const HOME = '/dashboard';
+    // public const HOME = '/post';
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.

@@ -12,8 +12,6 @@ class AttendanceComfirmNotification extends Notification
 {
     use Queueable;
 
-    public $incrementing = true;
-    protected $keyType = 'int';
     /**
      * Create a new notification instance.
      */
