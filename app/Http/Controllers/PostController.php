@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Tag;
+// notificationResponseモデル
+use App\Models\NotificationResponse;
+
 
 class PostController extends Controller
 {
@@ -165,6 +168,25 @@ class PostController extends Controller
             'lng' => $lng,
         ]);
     }
+
+    // public function count()
+    // {
+    //     $users = User::withCount(['notificationResponse' => function($query) {
+    //         $query->where('response', 'Yes');
+    //     }])->get();
+
+    //     echo "あなたの出勤日数は".$users[0]->notification_response_count."日です。";
+    // }
+
+    public function count()
+    {
+        $user = auth()->user();
+
+        $attendanceCount = $user->notificationResponse()->where('response', 'Yes')->count();
+
+        echo "あなたの出勤日数は".$attendanceCount."日です。";
+    }
 }
+
 
 
