@@ -11,7 +11,7 @@
                 {{ session('message') }}
             </div>
         @endif
-        <form method="post" action="{{ route('comment.update', ['post' => $post->id, 'comment' => $comment->id]) }}">
+        <form method="post" action="{{ route('post.comment.update', ['post' => $post->id, 'comment' => $comment->id]) }}">
             @csrf
             @method('patch')
             <div class="w-full flex flex-col">

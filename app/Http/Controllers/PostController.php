@@ -38,10 +38,11 @@ class PostController extends Controller
     // PostsController.php (コントローラ)
     public function index(Request $request)
     {
-        if($request->has(['latitude', 'longitude'])) {
+        if($request->has(['latitude', 'longitude', 'radius'])) {
             $lat = $request->latitude;
             $lng = $request->longitude;
-            $posts = Post::withinDistance($lat, $lng)->get();
+            $radius = $request->radius;
+            $posts = Post::withinDistance($lat, $lng, $radius)->get();
         } else {
             $posts = Post::all(); // or any default set of posts
         }
