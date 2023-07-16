@@ -13,7 +13,7 @@
       @endif --}}
       <x-message :message="session('message')" />
       
-      <form method="post" action="{{ route('comment.store', $post) }}">
+      <form method="post" action="{{ route('post.comment.store', $post) }}">
           @csrf
           <div class="w-full flex flex-col">
               <label for="content" class="font-semibold mt-4">本文</label>

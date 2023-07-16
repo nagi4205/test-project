@@ -13,6 +13,9 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script src="https://kit.fontawesome.com/26cd3d4f75.js" crossorigin="anonymous"></script>
+        <script src="../path/to/flowbite/dist/flowbite.min.js"></script>
+
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -32,6 +35,6 @@
                 {{ $slot }}
             </main>
         </div>
-        {{-- <script src="./assets/vendor/preline/dist/preline.js"></script> --}}
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.7.0/flowbite.min.css"  rel="stylesheet" />
     </body>
 </html>

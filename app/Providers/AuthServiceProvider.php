@@ -3,9 +3,10 @@
 namespace App\Providers;
 
 //デフォルトではGateのUse宣言がコメントアウトされている。Gateを使う場合はコメントアウトを消す。
-use Illuminate\Support\Facades\Gate;
 use App\Models\User;
+use App\Policies\PostPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        Post::class => PostPolicy::class,
     ];
 
     /**
@@ -23,13 +24,19 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // $this->registerPolicies();
         // 'test'がGateの名前
-        //$userがどこで定義されているのかわからない。久保さんに
         Gate::define('test', function (User $user) {
             if($user->id === 1) {
                 return true;
             }
             return false;
         });
+
+        Gate::define('isAdmin', function(User $user) {
+            return $user->role == 'admin';
+        });
+
+        // Gate::define('update-post', [PostPolicy::class, 'update']);
     }
 }

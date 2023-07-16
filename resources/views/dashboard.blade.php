@@ -17,6 +17,15 @@
 
     {{-- setLocation.jsファイル内のリダイレクトのロジックによってactionとmethodmethodを補完している。 --}}
     {{-- <form method="get" action="{{ route('post.index') }}"> --}}
+        <label>
+            <input type="radio" id="radius_3" name="radius" value="3" checked> 3キロメートル
+        </label>
+        <label>
+            <input type="radio" id="radius_5" name="radius" value="5"> 5キロメートル
+        </label>
+        <label>
+            <input type="radio" id="radius_10" name="radius" value="10"> 10キロメートル
+        </label>
         <div class="flex justify-center items-center h-screen">
             {{-- idを追加 --}}
             <x-primary-button id="home-button" class="mt-4 hover:opacity-75">
