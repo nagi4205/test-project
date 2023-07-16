@@ -32,6 +32,38 @@
               {{-- 　PostモデルとUserモデルを関連付けている↓ --}}
               {{$post->created_at}} / {{$post->user->name??'Unknown'}}
             </p>
+
+            {{-- <p>
+              @if(auth()->check() && auth()->user()->likes()->where('post_id', $post->id)->exists())
+              <!-- お気に入り削除ボタン -->
+              <form method="POST" action="{{ route('favorites.remove', $post) }}">
+                  @csrf
+                  <button type="submit">お気に入りから削除</button>
+              </form>
+              @else
+              <!-- お気に入り追加ボタン -->
+              <form method="POST" action="{{ route('favorites.add', $post) }}">
+                  @csrf
+                  <button type="submit">お気に入りに追加</button>
+              </form>
+              @endif
+             </p> --}}
+
+             <!-- お気に入り追加/削除ボタン -->
+            <p>
+              <form method="POST" action="{{ route('like', $post) }}">
+                @csrf
+                <button type="submit" class="mt-8 hover:opacity-75">
+                    @if(auth()->check() && auth()->user()->likes()->where('post_id', $post->id)->exists())
+                        <i class="fas fa-heart"></i>
+                    @else
+                        <i class="far fa-heart"></i> 
+                    @endif
+                </button>
+              </form>
+            </p>
+          
+
           </div>
         </div>
       @endforeach

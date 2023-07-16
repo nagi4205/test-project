@@ -30,6 +30,10 @@ class Post extends Model
         return $this->belongsToMany(Tag::class, 'post_tags');
     }
 
+    public function likedBy() {
+        return $this->belongsToMany(User::class, 'likes', 'post_id', 'user_id')->withTimestamps();
+    }
+
     public function scopeWithinDistance($query, $lat, $lng, $radius = 3) {
     $query->whereRaw("
         ( 6371 * acos( cos( radians(?) ) *

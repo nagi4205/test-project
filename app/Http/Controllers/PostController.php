@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Tag;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\PostUpdateRequest;
+use Illuminate\Support\Facades\Gate;
+
 // notificationResponseモデル
 use App\Models\NotificationResponse;
 
@@ -112,18 +116,19 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        $user = Auth::user();
+        if($user->id !== $post->user_id) {
+            abort(403, 'Unauthorized action.');
+        }
         return view('post.edit', compact('post'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(PostUpdateRequest $request, Post $post)
     {
-        $validated = $request->validate([
-            'title' => 'required | max:20',
-            'content' => 'required | max:400',
-        ]);
+        $validated = $request->validated();
 
         $validated['user_id'] = auth()->id();
 
@@ -138,6 +143,8 @@ class PostController extends Controller
      */
     public function destroy(Request $request, Post $post)
     {
+        $this->authorize('update', $post);
+
         DB::transaction(function () use ($request, $post) {
             $post->comments()->delete();
             $post->delete();

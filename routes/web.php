@@ -5,6 +5,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\NotificationResponseController;
 use Illuminate\Support\Facades\Route;
 // あとでけす
@@ -65,6 +66,8 @@ Route::get('/test-notifications', function (){
 
 //構文テスト用
 Route::get('test', [TestController::class, 'test']);
+Route::get('test', [TestController::class, 'test2']);
+
 
 Route::get('/notification', [NotificationController::class, 'index'])->name('notification.index');
 
@@ -101,6 +104,11 @@ Route::get('notification/count', [PostController::class, 'count'])->name('notifi
 Route::get('post/api', [PostController::class, 'api'])->name('post.api');
 Route::get('post/result', [PostController::class, 'currentLocation'])->name('post.currentLocation');
 
+
+Route::post('post/{post}/like', [LikeController::class, 'like'])->name('like');
+//テスト用にlikes.indexからlikes.testに変更↓
+Route::get('/like', [likeController::class, 'index'])->name('like.index');
+Route::get('/likes/test', [likeController::class, 'test'])->name('likes.test');
 
 
 
