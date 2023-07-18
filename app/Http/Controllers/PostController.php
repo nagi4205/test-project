@@ -48,7 +48,7 @@ class PostController extends Controller
             $radius = $request->radius;
             $posts = Post::withinDistance($lat, $lng, $radius)->get();
         } else {
-            $posts = Post::all(); // or any default set of posts
+            $posts = Post::all();
         }
         return view('post.index', compact('posts'));
     }
@@ -123,9 +123,6 @@ class PostController extends Controller
         return view('post.edit', compact('post'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(PostUpdateRequest $request, Post $post)
     {
         $validated = $request->validated();

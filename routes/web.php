@@ -7,6 +7,7 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\NotificationResponseController;
+use App\Http\Controllers\DailyMoodController;
 use Illuminate\Support\Facades\Route;
 // あとでけす
 use App\Models\User;
@@ -40,12 +41,17 @@ Route::get('/', function () {
 //     });
 // });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'redirect.if.unread.notifications'])->name('dashboard');
+Route::middleware(['dailyForm'])->group(function() {
+    Route::resource('post', PostController::class);
+    Route::resource('post.comment', CommentController::class);
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});
 
-Route::resource('post', PostController::class);
-Route::resource('post.comment', CommentController::class);
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'redirect.if.unread.notifications'])->name('dashboard');
 
 // あとで消す
 Route::get('/test-notification', function () {
@@ -110,6 +116,10 @@ Route::post('post/{post}/like', [LikeController::class, 'like'])->name('like');
 Route::get('/like', [likeController::class, 'index'])->name('like.index');
 Route::get('/likes/test', [likeController::class, 'test'])->name('likes.test');
 
+Route::post('daily_select', [DailyMoodController::class, 'store'])->name('daily_mood.store');
+Route::get('daily_select', [DailyMoodController::class, 'show'])->name('daily_mood.show');
+// テスto
+Route::get('daily_test', [DailyMoodController::class, 'test'])->name('daily_mood.test');
 
 
 Route::middleware('auth')->group(function () {
