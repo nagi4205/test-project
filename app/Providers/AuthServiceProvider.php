@@ -5,6 +5,7 @@ namespace App\Providers;
 //デフォルトではGateのUse宣言がコメントアウトされている。Gateを使う場合はコメントアウトを消す。
 use App\Models\User;
 use App\Policies\PostPolicy;
+use App\Policies\CommentPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -17,6 +18,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Post::class => PostPolicy::class,
+        Comment::class => CommentPolicy::class,
     ];
 
     /**

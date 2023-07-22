@@ -33,7 +33,7 @@ class CheckDailyForm
                 ->first();
 
             if (is_null($status)) {
-                return redirect()->route('daily_mood.create');
+                return redirect()->route('daily_mood.show');
             }
         }
 

@@ -17,7 +17,7 @@
 
 
           
-          @foreach($sortedLikes as $like)
+          @foreach($likes as $like)
             <div class="mt-4 p-8 bg-white w-full rounded-2xl">
               {{-- ここに画像を表示 --}}
               @isset($like->image)

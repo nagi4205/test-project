@@ -18,22 +18,24 @@
                 <h1 class="text-lg font-semibold">
                     {{ $post->title }}
                 </h1>
-                <div class="text-right flex">
-                    <a href="{{route('post.edit', $post)}}" class="flex-1">
-                        <x-primary-button>
-                            編集
-                        </x-primary-button>
-                    </a>
-
-                    <form method="post" action="{{route('post.destroy', $post)}}" class="flex-2">
-                        @csrf
-                        @method('delete')
-                        <x-primary-button class="bg-red-700 ml-2">
-                            削除
-                        </x-primary-button>
-                    </form>
-
-                    <a href="{{ route('post.comment.create', $post) }}" class="flex-3">
+                <div class="flex justify-end">
+                    @can('update', $post)
+                        <a href="{{route('post.edit', $post)}}">
+                            <x-primary-button>
+                                編集
+                            </x-primary-button>
+                        </a>
+                    @endcan
+                    @can('delete', $post)
+                        <form method="post" action="{{route('post.destroy', $post)}}">
+                            @csrf
+                            @method('delete')
+                            <x-primary-button class="bg-red-700 ml-2">
+                                削除
+                            </x-primary-button>
+                        </form>
+                    @endcan
+                    <a href="{{ route('post.comment.create', $post) }}">
                         <x-primary-button class="ml-2">
                             コメントする
                         </x-primary-button>
@@ -57,7 +59,7 @@
         </div>
     </div>
 
-    @foreach($comments as $comment)
+    @foreach($post->comments as $comment)
         <div class="mx-w-7xl mx-auto px-6">
             <div class="bg-white w-full rounded-2xl">
                 <div class="mt-4 p-4">
@@ -65,18 +67,22 @@
                         {{ $comment->title }}
                     </h1>
                     <div class="text-right flex">
-                        <a href="{{route('post.comment.edit', ['post' => $post->id, 'comment' => $comment->id])}}" class="flex-1">
-                            <x-primary-button>
-                                編集
-                            </x-primary-button>
-                        </a>
-                        <form method="post" action="{{route('post.comment.destroy', ['post' => $post->id, 'comment' => $comment->id])}}" class="flex-2">
-                            @csrf
-                            @method('delete')
-                            <x-primary-button class="bg-red-700 ml-2">
-                                削除
-                            </x-primary-button>
-                        </form>
+                        @can('update', $comment)
+                            <a href="{{route('post.comment.edit', ['post' => $post->id, 'comment' => $comment->id])}}" class="flex-1">
+                                <x-primary-button>
+                                    編集
+                                </x-primary-button>
+                            </a>
+                        @endcan
+                        @can('delete', $comment)
+                            <form method="post" action="{{route('post.comment.destroy', ['post' => $post->id, 'comment' => $comment->id])}}" class="flex-2">
+                                @csrf
+                                @method('delete')
+                                <x-primary-button class="bg-red-700 ml-2">
+                                    削除
+                                </x-primary-button>
+                            </form>
+                        @endcan
                     </div>
                     <hr class="w-full">
                     <p class="mt-4 whitespace-pre-line">

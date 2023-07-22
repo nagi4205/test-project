@@ -8,7 +8,8 @@ use App\Models\User;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\PostUpdateRequest;
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use Illuminate\Support\Facades\Gate;
 
 // notificationResponseモデル
@@ -17,29 +18,6 @@ use App\Models\NotificationResponse;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function post()
-    {
-        //
-    }
-
-    // public function index()
-    // {
-    //     //ここで初めて$postsを定義
-    //     //postsテーブルのデータを取得
-    //     //EloquentORMを使って条件にあったデータを抽出する方法。where句を使う。
-    //     //モデル名：：where('条件をつけるカラム', ’条件’)->get(); じゅんこ本P.228
-    //     // $posts=Post::where('user_id', auth()->id())->get();
-    //     // ページネーションバージョン↓
-    //     // $posts=Post::where('user_id', auth()->id())->paginate(10);
-    //     $posts=Post::paginate(15);
-    //     //compact関数で変数$postsを受け渡す
-    //     return view('post.index', compact('posts'));
-    // }
-
-    // PostsController.php (コントローラ)
     public function index(Request $request)
     {
         if($request->has(['latitude', 'longitude', 'radius'])) {
@@ -53,28 +31,15 @@ class PostController extends Controller
         return view('post.index', compact('posts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $tags = Tag::all();
         return view('post.create', compact('tags'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required | max:20',
-            'content' => 'required | max:400',
-            'image' => 'nullable | max:2048 | mimes:jpg,jpeg,png,gif',
-            'latitude' => 'nullable | numeric',
-            'longitude' => 'nullable | numeric',
-            'tag' => 'required | exists:tags,id',
-        ]);
+        $validated = $request->validated();
 
         $image = $request->file('image');
 
@@ -100,20 +65,12 @@ class PostController extends Controller
         return back()->with('message', '投稿を保存しました！');
     }
 
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Post $post)
+    public function show($id)
     {
-        $comments = $post->comments;
-        return view('post.show', compact('post', 'comments'));
+        $post = Post::with('comments')->find($id);
+        return view('post.show', compact('post'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Post $post)
     {
         $user = Auth::user();
@@ -123,7 +80,7 @@ class PostController extends Controller
         return view('post.edit', compact('post'));
     }
 
-    public function update(PostUpdateRequest $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post)
     {
         $validated = $request->validated();
 
@@ -135,12 +92,9 @@ class PostController extends Controller
         return back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Request $request, Post $post)
     {
-        $this->authorize('update', $post);
+        $this->authorize('delete', $post);
 
         DB::transaction(function () use ($request, $post) {
             $post->comments()->delete();
@@ -173,15 +127,6 @@ class PostController extends Controller
             'lng' => $lng,
         ]);
     }
-
-    // public function count()
-    // {
-    //     $users = User::withCount(['notificationResponse' => function($query) {
-    //         $query->where('response', 'Yes');
-    //     }])->get();
-
-    //     echo "あなたの出勤日数は".$users[0]->notification_response_count."日です。";
-    // }
 
     public function count()
     {

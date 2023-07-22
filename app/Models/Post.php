@@ -31,7 +31,7 @@ class Post extends Model
     }
 
     public function likedBy() {
-        return $this->belongsToMany(User::class, 'likes', 'post_id', 'user_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'likes')->withTimestamps();
     }
 
     public function scopeWithinDistance($query, $lat, $lng, $radius = 3) {

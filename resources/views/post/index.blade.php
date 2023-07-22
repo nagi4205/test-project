@@ -54,7 +54,7 @@
               <form method="POST" action="{{ route('like', $post) }}">
                 @csrf
                 <button type="submit" class="mt-8 hover:opacity-75">
-                    @if(auth()->check() && auth()->user()->likes()->where('post_id', $post->id)->exists())
+                    @if(auth()->check() && auth()->user()->likedPosts()->where('post_id', $post->id)->exists())
                         <i class="fas fa-heart"></i>
                     @else
                         <i class="far fa-heart"></i> 
