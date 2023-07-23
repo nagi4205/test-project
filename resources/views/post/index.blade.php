@@ -59,6 +59,7 @@
                     @else
                         <i class="far fa-heart"></i> 
                     @endif
+                    <span class="mx-2">{{$post->likedby->count()}}</span>
                 </button>
               </form>
             </p>
