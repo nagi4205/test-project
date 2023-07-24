@@ -29,8 +29,12 @@
           </p>
           <div class="p-4 text-sm font-semibold">
             <p>
-              {{-- 　PostモデルとUserモデルを関連付けている↓ --}}
               {{$post->created_at}} / {{$post->user->name??'Unknown'}}
+            </p>
+            <p>
+              @foreach($post->tags as $tag)
+                {{$tag->name}}
+              @endforeach
             </p>
 
             {{-- <p>

@@ -76,6 +76,7 @@ Route::get('test', [TestController::class, 'test2']);
 
 
 Route::get('/notification', [NotificationController::class, 'index'])->name('notification.index');
+Route::get('/notification2', [NotificationController::class, 'index2'])->name('notification.index2');
 
 //リソースコントローラの導入のためコメントアウト
 //投稿処理のルーティング

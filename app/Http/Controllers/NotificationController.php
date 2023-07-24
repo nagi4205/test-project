@@ -17,5 +17,15 @@ class NotificationController extends Controller
         ]);
     }
 
+    public function index2()
+    {
+        $user = Auth::user();
+        $notifications = $user->unreadNotifications()->paginate(10);
+
+        return view('notification/weeklyRainMoodNotification', [
+            'notifications' => $notifications
+        ]);
+    }    
+
     
 }

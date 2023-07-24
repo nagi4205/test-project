@@ -17,9 +17,9 @@ class TagsTableSeeder extends Seeder
         $now = Carbon::now();
 
         DB::table('tags')->insert([
-            ['name' => 'つらい…', 'created_at' => $now, 'updated_at' => $now],
-            ['name' => '楽しい！！', 'created_at' => $now, 'updated_at' => $now],
-            ['name' => '今日も１日！', 'created_at' => $now, 'updated_at' => $now],
+            ['name' => '晴れ', 'created_at' => $now, 'updated_at' => $now],
+            ['name' => '曇り', 'created_at' => $now, 'updated_at' => $now],
+            ['name' => '雨', 'created_at' => $now, 'updated_at' => $now],
         ]);
 
 

@@ -3,10 +3,14 @@
 namespace App\Console;
 
 use App\Models\User;
+use App\Models\Mood;
+use App\Models\UserDailyStatus;
+use Illuminate\Support\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\AttendanceComfirmNotification;
+use App\Notifications\RainyMoodWeeklyNotification;
 
 
 class Kernel extends ConsoleKernel
@@ -16,22 +20,54 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        Log::info('Scheduling notifications');
-
+        logger('test', ['file' => __FILE__, 'line' => __LINE__]);
+    
         $schedule->call(function () {
-            $users = User::all();
-            foreach ($users as $user) {
-                // unreadNotification all unread notifications
-                if($user->unreadNotifications->isNotEmpty()) {
-                    foreach($user->unreadNotifications as $notification) {
-                        $notification->markAsRead();
-                    }
-                }
-                // new notification
-                $user->notify(new AttendanceComfirmNotification);
+
+        $lastWeekStart = Carbon::now()->subDays(7)->startOfDay();
+        $lastWeekEnd = Carbon::now()->subDay()->endOfDay();
+
+        // すべてのユーザーに対してループ
+        foreach (User::all() as $user) {
+
+            $userMoods = UserDailyStatus::where('user_id', $user->id)
+                        ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])
+                        ->get()
+                        ->pluck('mood_id');
+
+            if ($user->id == 1) {
+                Log::info($userMoods);
             }
+
+            $moodValues = $userMoods->map(function ($moodId) {
+                $mood = Mood::find($moodId);
+                switch ($mood->mood) {
+                    case '晴れ':
+                        return 100;
+                    case '曇り':
+                        return 60;
+                    case '雨':
+                        return 40;
+                    default:
+                        return 0;
+                }
+            });
+
+            // if ($user->id == 1) {
+            //     Log::info($moodValues);
+            // }
+
+            $averageMood = $moodValues->average();
+
+            if ($averageMood < 100) {
+                $user->notify(new RainyMoodWeeklyNotification());
+            }
+        }
+
         })->everyMinute();
+        // ->weekly->sundays()->at('9:00')->description('RainyMoodWeeklyNotification');
     }
+
 
     /**
      * Register the commands for the application.
