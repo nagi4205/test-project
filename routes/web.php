@@ -9,6 +9,8 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\NotificationResponseController;
 use App\Http\Controllers\DailyMoodController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Carbon;
+use App\Models\Notification; 
 // あとでけす
 use App\Models\User;
 // use App\Notifications\AttendanceConfirmation;
@@ -25,21 +27,16 @@ use App\Notifications\AttendanceComfirmNotification;
 |
 */
 
+Route::get('delete_data', function() {
+    $targetDate = Carbon::create(2023, 7, 25, 0, 0, 0);
+    Notification::where('created_at', '<=', $targetDate)->delete();
+
+    echo '削除しました。';
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
-// ->middleware('can:test');
-//↑'test'Gateを有効化
-// ->middleware('auth'); 
-//↑middlewareを使ってログインしないとwelcome.blade.phpを表示できないようにする
-//middleware('guest')にすると非ログイン状態でないと表示できないようになる
-
-// Route::middleware(['auth', 'redirect.if.unread.notifications'])->group(function () {
-//     // ここに、認証後に適用されるルートを記述します
-//     Route::get('/dashboard', function () {
-//         return view('dashboard');
-//     });
-// });
 
 Route::middleware(['dailyForm'])->group(function() {
     Route::resource('post', PostController::class);
@@ -49,18 +46,13 @@ Route::middleware(['dailyForm'])->group(function() {
     })->name('dashboard');
 });
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'redirect.if.unread.notifications'])->name('dashboard');
-
-// あとで消す
 Route::get('/test-notification', function () {
     $user = User::find(1);
     $user->notify(new AttendanceComfirmNotification());
 
     return 'Notification sent!';
 });
-// あとで消す
+
 Route::get('/test-notifications', function (){
     $users = User::all();
     foreach ($users as $user) {
@@ -70,56 +62,31 @@ Route::get('/test-notifications', function (){
     return 'Notification Sent';
 });
 
-//構文テスト用
+Route::get('comment/{comment}/reply/create', [CommentController::class, 'replyCreate'])->name('comment.reply.create');
+Route::post('comment/{comment}/reply/store', [CommentController::class, 'replyStore'])->name('comment.reply.store');
+
 Route::get('test', [TestController::class, 'test']);
-Route::get('test', [TestController::class, 'test2']);
+Route::get('test2', [TestController::class, 'test2']);
 
 
 Route::get('/notification', [NotificationController::class, 'index'])->name('notification.index');
 Route::get('/notification2', [NotificationController::class, 'index2'])->name('notification.index2');
 
-//リソースコントローラの導入のためコメントアウト
-//投稿処理のルーティング
-// Route::get('post/create', [PostController::class, 'create'])->middleware(['auth'])->name('post.create');
-// Route::post('post', [PostController::class, 'store'])->name('post.store');
-// Route::get('post', [PostController::class, 'index'])->name('post.index');
-// //個別表示のルーティングP.265
-// Route::get('post/{post}/show', [PostController::class, 'show'])->name('post.show');
-// Route::get('post/{post}/edit', [PostController::class, 'edit'])->name('post.edit');
-// Route::patch('post/{post}', [PostController::class, 'update'])->name('post.update');
-// Route::delete('post/{post}', [PostController::class, 'destroy'])->name('post.destroy');
-
-// //検索画面のルーティング
-// Route::get('post/search', [PostController::class, 'search'])->name('post.search');
-
-//コメントCRUDのルーティング
-// ある投稿に対するコメント作成画面↓
-// Route::get('post/{post}/comment/create', [CommentController::class, 'create'])->name('comment.create');
-// Route::post('post/{post}/comment', [CommentController::class, 'store'])->name('comment.store');
-// Route::get('post/{post}/comment/{comment}/show', [CommentController::class, 'show'])->name('comment.show');
-// Route::get('post/{post}/comment/{comment}/edit', [CommentController::class, 'edit'])->name('comment.edit');
-// Route::patch('post/{post}/comment/{comment}', [CommentController::class, 'update'])->name('comment.update');
-// Route::delete('post/{post}/comment/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
-
-
-// routes/web.php
+Route::get('post/search', [PostController::class, 'search'])->name('post.search');
 
 Route::post('notification/{notification}/response', [NotificationResponseController::class, 'store'])->name('notification.response.store');
 Route::get('notification/count', [PostController::class, 'count'])->name('notificaiton.count');
 
-//APIの埋め込み画面表示用のルーティング
 Route::get('post/api', [PostController::class, 'api'])->name('post.api');
 Route::get('post/result', [PostController::class, 'currentLocation'])->name('post.currentLocation');
 
 
 Route::post('post/{post}/like', [LikeController::class, 'like'])->name('like');
-//テスト用にlikes.indexからlikes.testに変更↓
 Route::get('/like', [likeController::class, 'index'])->name('like.index');
 Route::get('/likes/test', [likeController::class, 'test'])->name('likes.test');
 
 Route::post('daily_select', [DailyMoodController::class, 'store'])->name('daily_mood.store');
 Route::get('daily_select', [DailyMoodController::class, 'show'])->name('daily_mood.show');
-// テスto
 Route::get('daily_test', [DailyMoodController::class, 'test'])->name('daily_mood.test');
 
 

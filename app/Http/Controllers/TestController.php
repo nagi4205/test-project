@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 use Exception;
 
 class TestController extends Controller
@@ -29,5 +30,12 @@ class TestController extends Controller
         echo "<br>";
         func(0);
         // func(0);
+    }
+
+    public function test2() {
+        $users = User::all();
+        foreach($users as $user) {
+            echo $user->name."<br>";
+        }
     }
 }

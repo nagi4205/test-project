@@ -67,6 +67,13 @@
                         {{ $comment->title }}
                     </h1>
                     <div class="text-right flex">
+                        @can('reply', $comment)
+                            <a href="{{route('comment.reply.create', $comment)}}">
+                                <x-primary-button class="bg-green-700 ml-2">
+                                    返信
+                                </x-primary-button>
+                            </a>
+                        @endcan
                         @can('update', $comment)
                             <a href="{{route('post.comment.edit', ['post' => $post->id, 'comment' => $comment->id])}}" class="flex-1">
                                 <x-primary-button>

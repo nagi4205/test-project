@@ -48,6 +48,10 @@ class CommentPolicy
         return $user->id == $comment->user_id;
     }
 
+    public function reply(User $user, Comment $comment): bool
+    {
+        return true;
+    }
     /**
      * Determine whether the user can restore the model.
      */

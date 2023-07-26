@@ -61,4 +61,27 @@ class CommentController extends Controller
     
         return redirect()->route('post.index');
     }
+
+    public function replyCreate(Comment $comment)
+    {
+        return view('comment.replyCreate', compact('comment'));
+    }
+
+    public function replyStore(Request $request, Comment $comment)
+    {
+        $validated = $request->validate([
+            'content' => 'required|max:2000',
+        ]);
+
+        $validated['user_id'] = auth()->id();
+        $validated['post_id'] = $comment->post_id;
+        $validated['parent_id'] = $comment->id;
+        
+        $reply = Comment::create($validated);
+
+
+        return redirect()
+        ->route('post.show', ['post' => $comment->post_id])
+        ->with('message', '返信を投稿しました。');
+    }
 }

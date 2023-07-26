@@ -23,6 +23,9 @@ class Kernel extends ConsoleKernel
         logger('test', ['file' => __FILE__, 'line' => __LINE__]);
     
         $schedule->call(function () {
+        
+        $userDailyStatuses = UserDailyStatus::all();
+        Log::info($userDailyStatuses);
 
         $lastWeekStart = Carbon::now()->subDays(7)->startOfDay();
         $lastWeekEnd = Carbon::now()->subDay()->endOfDay();
@@ -30,14 +33,14 @@ class Kernel extends ConsoleKernel
         // すべてのユーザーに対してループ
         foreach (User::all() as $user) {
 
+
             $userMoods = UserDailyStatus::where('user_id', $user->id)
                         ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])
                         ->get()
                         ->pluck('mood_id');
 
-            if ($user->id == 1) {
-                Log::info($userMoods);
-            }
+            Log::info("UserDailyStatus records for user_id={$user->id} between {$lastWeekStart} and {$lastWeekEnd}:", $userMoods->toArray());
+
 
             $moodValues = $userMoods->map(function ($moodId) {
                 $mood = Mood::find($moodId);
@@ -53,14 +56,14 @@ class Kernel extends ConsoleKernel
                 }
             });
 
-            // if ($user->id == 1) {
-            //     Log::info($moodValues);
-            // }
+            Log::info($moodValues);
 
             $averageMood = $moodValues->average();
 
             if ($averageMood < 100) {
+                Log::info("Sending RainyMoodWeeklyNotification to user_id={$user->id}");
                 $user->notify(new RainyMoodWeeklyNotification());
+                Log::info("Sent RainyMoodWeeklyNotification to user_id={$user->id}");
             }
         }
 

@@ -43,15 +43,10 @@ class PostController extends Controller
 
         $image = $request->file('image');
 
-        //画像がアップロードされていればstrageに保存
         if ($request->hasFile('image')) {
-            // 現在の年月日を取得してYmdフォーマットに変換
             $currentDateTime = now()->format('Ymd');
-            // Get the original file name and append the current date and time
             $filename = $currentDateTime.'_'.$request->file('image')->getClientOriginalName();
-            // Store the image with the new file name
             $path = $request->file('image')->storePubliclyAs('images', $filename);
-            // Update the 'image' attribute in the validated data
             $validated['image'] = $path;
         } else {
             $path = null;
@@ -119,11 +114,9 @@ class PostController extends Controller
     {
         $lat = $request->lat;
         $lng = $request->lng;
-        // currentLocationで表示
+
         return view('post.currentLocation', [
-            // 現在地緯度latをbladeへ渡す
             'lat' => $lat,
-            // 現在地経度lngをbladeへ渡す
             'lng' => $lng,
         ]);
     }
