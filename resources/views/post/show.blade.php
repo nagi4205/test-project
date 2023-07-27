@@ -93,7 +93,7 @@
                     </div>
                     <hr class="w-full">
                     <p class="mt-4 whitespace-pre-line">
-                        {{ $comment->content }}
+                        {{ $comment->content }} / {{ $comment->user->name }}
                     </p>
                     <div class="text-sm font-semibold flex flex-row-reverse">
                         <p>
@@ -103,5 +103,39 @@
                 </div>
             </div>
         </div>
+        @foreach($comment->children as $child_comment)
+            <div class="mx-w-7xl mx-auto px-6 ml-12">
+                <div class="bg-white w-full rounded-2xl">
+                    <div class="mt-4 p-4">
+                        <div class="text-right flex">
+                            @can('update', $child_comment)
+                                <a href="{{route('post.comment.edit', ['post' => $post->id, 'comment' => $child_comment->id])}}" class="flex1">
+                                    <x-primary-button>
+                                        編集
+                                    </x-primary-button>
+                                </a>
+                            @endcan
+                            @can('delete', $child_comment)
+                                <form method="post" action="{{route('post.comment.destroy', ['post' => $post->id, 'comment' => $child_comment->id])}}" class="flex2">
+                                    @csrf
+                                    @method('delete')
+                                    <x-primary-button class="bg-red-700 ml-2">
+                                        削除
+                                    </x-primary-button>
+                                </form>
+                            @endcan
+                        </div>
+                        <div cless="mt-2 whitespace-pre-line">
+                            {{ $child_comment->content}} / {{ $child_comment->user->name}}
+                        </div>
+                        <div class="text-sm font-semibold flex flex-row-reverse">
+                            <p>
+                                {{ $child_comment->created_at }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
     @endforeach
 </x-app-layout>

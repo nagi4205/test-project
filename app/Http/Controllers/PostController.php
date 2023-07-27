@@ -62,7 +62,10 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $post = Post::with('comments')->find($id);
+        $post = Post::with(['comments' => function ($query) {
+            $query->whereNull('parent_id');
+        }, 'comments.children'])->find($id);
+        
         return view('post.show', compact('post'));
     }
 
