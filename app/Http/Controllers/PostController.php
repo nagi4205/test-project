@@ -55,7 +55,7 @@ class PostController extends Controller
         $validated['user_id'] = auth()->id();
 
         $post = Post::create($validated);
-        $post->tags()->attach($request->tag);  
+        $post->tags()->attach($request->tag);
 
         return back()->with('message', '投稿を保存しました！');
     }
@@ -65,7 +65,7 @@ class PostController extends Controller
         $post = Post::with(['comments' => function ($query) {
             $query->whereNull('parent_id');
         }, 'comments.children'])->find($id);
-        
+
         return view('post.show', compact('post'));
     }
 
