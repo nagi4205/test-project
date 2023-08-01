@@ -7,8 +7,11 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    public function show($id) {
-        $user = User::findOrFail($id);
-        return view('user.show', compact('user'));
+    public function show(User $user) {
+        $user->load('posts');
+
+        $alreadyFollowing = auth()->user()->followings()->where('followee_id', $user->id)->exists();
+
+        return view('user.show', compact('user', 'alreadyFollowing'));
     }
 }

@@ -24,10 +24,11 @@ class PostController extends Controller
             $lat = $request->latitude;
             $lng = $request->longitude;
             $radius = $request->radius;
-            $posts = Post::withinDistance($lat, $lng, $radius)->get();
+            $posts = Post::with('user')->withinDistance($lat, $lng, $radius)->get();
         } else {
-            $posts = Post::all();
+            $posts = Post::with('user')->get();
         }
+        
         return view('post.index', compact('posts'));
     }
 

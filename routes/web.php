@@ -94,6 +94,8 @@ Route::post('daily_select', [DailyMoodController::class, 'store'])->name('daily_
 Route::get('daily_select', [DailyMoodController::class, 'show'])->name('daily_mood.show');
 Route::get('daily_test', [DailyMoodController::class, 'test'])->name('daily_mood.test');
 
+Route::get('user/{user}', [UserController::class, 'show'])->name('user.show');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
