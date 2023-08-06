@@ -72,6 +72,8 @@ Route::get('test2', [TestController::class, 'test2']);
 
 Route::get('user/{id}/show', [UserController::class, 'show']);
 Route::post('store', [FollowController::class, 'store'])->name('follows.store');
+Route::post('follow', [FollowController::class, 'follow'])->name('follows.follow');
+Route::post('respondToFollowRequest', [FollowController::class, 'respondToFollowRequest'])->name('follows.respondToFollowRequest');
 
 
 Route::get('/notification', [NotificationController::class, 'index'])->name('notification.index');

@@ -22,7 +22,7 @@ class NotificationController extends Controller
         $user = Auth::user();
         $notifications = $user->unreadNotifications()->paginate(10);
 
-        return view('notification/weeklyRainMoodNotification', [
+        return view('notification.weeklyRainMoodNotification', [
             'notifications' => $notifications
         ]);
     }    

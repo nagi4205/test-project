@@ -29,19 +29,27 @@
     </div>
 
     <div class="mt-8">
-      <form action="{{ route('follows.store') }}" method="POST">
-        @csrf
-        <input type="hidden" name="user_id" value="{{ $user->id }}">
-        @if($alreadyFollowing)
-          <x-primary-button type="submit">
-            フォローしています
-          </x-primary-button>
-        @else
-          <x-primary-button type="submit">
-            フォローする
-          </x-primary-button>
-        @endif
-      </form>
+      @if($ViewingOwnProfile)
+        <a href="{{ route('profile.edit') }}" class="primary-button">
+          <button class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-full border border-transparent font-semibold text-indigo-500 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800">
+            プロフィール編集
+          </button>
+        </a>
+      @else
+        <form action="{{ route('follows.follow') }}" method="POST">
+          @csrf
+          <input type="hidden" name="user_id" value="{{ $user->id }}">
+          @if($alreadyFollowing)
+            <x-primary-button type="submit">
+              フォローしています
+            </x-primary-button>
+          @else
+            <x-primary-button type="submit">
+              フォローする
+            </x-primary-button>
+          @endif
+        </form>
+      @endif
     </div>
   </div>
 

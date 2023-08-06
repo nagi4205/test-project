@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 
 class TestController extends Controller
@@ -33,6 +34,24 @@ class TestController extends Controller
     }
 
     public function test2() {
+
+        $date1 = Carbon::parse('2023-09-30');
+        $date2 = Carbon::parse('2023-10-31');
+
+        $time = $date1->diffInMonths($date2);
+
+        echo $date1;
+
+        if ($time < 1) {
+            echo "１ヶ月以内です。";
+        } else {
+            echo "一ヶ月以上です。";
+        }
+
+        echo $time."<br>";
+        
+        echo $date2."<br>";
+
         $users = User::all();
         foreach($users as $user) {
             echo $user->name."<br>";

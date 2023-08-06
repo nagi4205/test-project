@@ -25,8 +25,10 @@ class ViewServiceProvider extends ServiceProvider
         View::composer('layouts.sidebar', function ($view) {
             // ログイン中のユーザー情報を取得
             $user = Auth::user();
+            $unreadNotificationCount = $user->unreadNotifications()->count();
             // ビューにログイン中のユーザー情報を渡す
             $view->with('user', $user);
+            $view->with('unreadNotificationCount', $unreadNotificationCount);
         });
     }
 }

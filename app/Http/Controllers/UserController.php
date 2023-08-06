@@ -12,6 +12,8 @@ class UserController extends Controller
 
         $alreadyFollowing = auth()->user()->followings()->where('followee_id', $user->id)->exists();
 
-        return view('user.show', compact('user', 'alreadyFollowing'));
+        $ViewingOwnProfile = auth()->id() == $user->id;
+
+        return view('user.show', compact('user', 'alreadyFollowing', 'ViewingOwnProfile'));
     }
 }
