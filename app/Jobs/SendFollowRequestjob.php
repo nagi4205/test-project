@@ -35,8 +35,8 @@ class SendFollowRequestjob implements ShouldQueue
     {
         Log::info("At the beginning of handle method: followerId is {$this->followerId}");
         $follow = Follow::where('follower_id', $this->followerId)
-        ->where('followee_id', $this->followeeId)
-        ->first();
+                        ->where('followee_id', $this->followeeId)
+                        ->first();
 
         Log::info($this->followerId);
 

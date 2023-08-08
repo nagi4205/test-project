@@ -71,9 +71,14 @@ Route::get('test', [TestController::class, 'test']);
 Route::get('test2', [TestController::class, 'test2']);
 
 Route::get('user/{id}/show', [UserController::class, 'show']);
+Route::get('user/{user}', [UserController::class, 'show'])->name('user.show');
+Route::get('user/{user}/followings', [UserController::class, 'followings'])->name('user.followings');
+Route::get('user/{user}/followers', [UserController::class, 'followers'])->name('user.followers');
 Route::post('store', [FollowController::class, 'store'])->name('follows.store');
-Route::post('follow', [FollowController::class, 'follow'])->name('follows.follow');
+Route::post('follow', [FollowController::class, 'createFollowRequestJob'])->name('follows.createFollowRequestJob');
+Route::delete('unfollow/{user}', [FollowController::class, 'unfollow'])->name('follows.unfollow');
 Route::post('respondToFollowRequest', [FollowController::class, 'respondToFollowRequest'])->name('follows.respondToFollowRequest');
+
 
 
 Route::get('/notification', [NotificationController::class, 'index'])->name('notification.index');
@@ -96,7 +101,6 @@ Route::post('daily_select', [DailyMoodController::class, 'store'])->name('daily_
 Route::get('daily_select', [DailyMoodController::class, 'show'])->name('daily_mood.show');
 Route::get('daily_test', [DailyMoodController::class, 'test'])->name('daily_mood.test');
 
-Route::get('user/{user}', [UserController::class, 'show'])->name('user.show');
 
 
 Route::middleware('auth')->group(function () {

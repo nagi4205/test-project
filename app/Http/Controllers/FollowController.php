@@ -7,6 +7,12 @@ use Illuminate\Support\Facades\Log;
 use App\Jobs\SendFollowRequestJob;
 use App\Models\Follow;
 use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\DatabaseNotification;
+use App\Notifications\NewFollowRequestNotification;
+
 
 class FollowController extends Controller
 {
@@ -31,7 +37,7 @@ class FollowController extends Controller
         return redirect()->back()->with('success', $message);
     }
 
-    public function follow(Request $request) {
+    public function createFollowRequestJob(Request $request) {
         // validation, authentication checks, etc...
 
         $followerId = $request->user()->id;
@@ -41,11 +47,28 @@ class FollowController extends Controller
 
         $same = $followerId == $followeeId;
 
-        
         if ($same) {
-            // return back()->withErrors('自分自身をフォローすることはできません。');
             return back()->with('message', '自分自身をフォローすることはできません。');
         }
+
+        // $existingRequest = DatabaseNotification::where('type', NewFollowRequestNotification::class)
+        //                                        ->where('notifiable_id', $followeeId)
+        //                                        ->whereJsonContains('data->follower_id', $followerId)
+        //                                        ->first();
+
+        // if ($existingRequest) {
+        // Log::info("followeeId is {$followeeId}");
+        // return back()->with('message', 'すでにフォロー申請を送っています。');
+        // }
+
+        $cacheKey = "follow_request:{$followerId}:{$followeeId}";
+
+        if (Redis::get($cacheKey)) {
+            return back()->with('message', 'すでにフォロー申請を送っています。');
+        }   
+    
+        // Redis::setex($cacheKey, 300, true); // 5分間キャッシュする
+        Redis::set($cacheKey, true, 'EX', 300); 
         
         dispatch(new SendFollowRequestJob($followerId, $followeeId));
 
@@ -85,6 +108,22 @@ class FollowController extends Controller
 
 
         return back()->with('message', 'フォローリクエストが見つかりませんでした。');
+    }
+
+    public function unfollow(User $user) {
+        // ログイン中のユーザーを取得
+        $currentUser = Auth::user();
+
+        // 該当するフォロー関係を検索
+        $follow = $currentUser->follows()->where('followee_id', $user->id)->first();
+        if ($follow) {
+            // フォロー関係が存在すれば削除
+            $follow->delete();
+
+            return back()->with('message', 'ユーザーのフォローを解除しました。');
+        } else {
+            return back()->with('message', 'フォロー関係が見つかりませんでした。');
+        }
     }
 
 }

@@ -1,9 +1,9 @@
 <x-app-layout>
-  {{-- <x-slot name="header">
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+  <x-slot name="header">
+      <h2 class="flex justify-end font-semibold text-xl text-gray-800 leading-tight">
           {{ $user->name }}
       </h2>
-  </x-slot> --}}
+  </x-slot>
 
   @if(session('message'))
     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
@@ -36,21 +36,38 @@
           </button>
         </a>
       @else
-        <form action="{{ route('follows.follow') }}" method="POST">
-          @csrf
-          <input type="hidden" name="user_id" value="{{ $user->id }}">
-          @if($alreadyFollowing)
+        @if($alreadyFollowing)
+          <form action="{{ route('follows.unfollow', ['user' => $user->id]) }}" method="POST">
+            @csrf
+            @method('delete')
             <x-primary-button type="submit">
-              フォローしています
+              フォロー解除
             </x-primary-button>
-          @else
+          </form>
+        @elseif($alreadyRejected)
+          <x-primary-button>
+            拒否されました
+          </x-primary-button>
+        @else
+          <form action="{{ route('follows.createFollowRequestJob') }}" method="POST">
+            @csrf
+            <input type="hidden" name="user_id" value="{{ $user->id }}">
             <x-primary-button type="submit">
-              フォローする
+              フォロー申請を送る
             </x-primary-button>
-          @endif
-        </form>
+          </form>
+        @endif
       @endif
     </div>
+  </div>
+
+  <div class="flex ml-4 gap-x-8">
+    <a href="{{ route('user.followings', ['user' => $user->id]) }}">
+      <p>フォロー中{{ $followingsCount }}</p>
+    </a>
+    <a href="{{ route('user.followers', ['user' => $user->id]) }}">
+      <p>フォロワー{{ $followersCount }}</p>
+    </a>
   </div>
 
   {{-- <p>

@@ -64,12 +64,15 @@ class User extends Authenticatable
         return $this->hasMany(notificationResponse::class);
     }
 
-    public function followings() {
+    public function followingUsers() {
         return $this->belongsToMany(User::class, 'follows', 'follower_id', 'followee_id')->withTimestamps();
     }
     
-    public function followers() {
+    public function followerUsers() {
         return $this->belongsToMany(User::class, 'follows', 'followee_id', 'follower_id')->withTimestamps();
     }
 
+    public function follows() {
+        return $this->hasMany(Follow::class, 'follower_id');
+    }
 }

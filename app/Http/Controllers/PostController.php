@@ -29,10 +29,6 @@ class PostController extends Controller
             $posts = Post::with('user')->get();
         }
 
-        // foreach($posts as $post) {
-        //     dd($post->user->id);
-        // }
-        
         return view('post.index', compact('posts'));
     }
 

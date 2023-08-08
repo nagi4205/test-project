@@ -20,8 +20,13 @@
         @isset($notification->data['article_title'])
           <p>{{ $notification->data['article_title'] }}</p>
         @endisset
-        @isset($notification->data['follower_name'])
-          <p class="mb-4">{{ $notification->data['follower_name'] }}さんからフォロー申請が届いています。</p>
+        @isset($notification->data['follower_id'])
+          <a href="{{ route('user.show', ['user' => $notification->data['follower_id']]) }}">
+            <div class="flex items-center gap-x-2">
+              <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-gray-800" src="{{ Storage::url($notification->data['follower_profile_image']) }}" alt="Image Description">
+              <p class="mb-4">{{ $notification->data['follower_name'] }}さんからフォロー申請が届いています。</p>
+            </div>
+          </a>
           <form method="post" action="{{ route('follows.respondToFollowRequest') }}">
             @csrf
             <input type="hidden" name="follower_id" value="{{ $notification->data['follower_id'] }}">
@@ -38,7 +43,6 @@
             </div>
           </form>
         @endisset
-
     </div>
     @endforeach
     <div class="mb-4">

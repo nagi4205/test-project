@@ -49,6 +49,7 @@ class NewFollowRequestNotification extends Notification
         return [
             'follower_id' => $this->follower->id,
             'follower_name' => $this->follower->name,
+            'follower_profile_image' => $this->follower->profile_image,
         ];
     }
 }
