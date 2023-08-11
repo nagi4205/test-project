@@ -17,26 +17,26 @@
 
 
           
-          @foreach($likes as $like)
+          @foreach($likedPosts as $likedPost)
             <div class="mt-4 p-8 bg-white w-full rounded-2xl">
               {{-- ここに画像を表示 --}}
-              @isset($like->image)
-                <img src="{{ Storage::url($like->image) }}" >
+              @isset($likedPost->image)
+                <img src="{{ Storage::url($likedPost->image) }}" >
               @endisset
               <h1 class="p-4 text-lg font-semibold">
                 件名：
                 {{-- <a href="{{route('post.show', $post)}}" class="text-blue-600"> --}}
-                  {{$like->title}}
+                  {{$likedPost->title}}
                 </a>
               </h1>
               <hr class="w-full">
               <p class="mt-4 p-4">
-                {{$like->content}}
+                {{$likedPost->content}}
               </p>
               <div class="p-4 text-sm font-semibold">
                 <p>
                   {{-- 　PostモデルとUserモデルを関連付けている↓ --}}
-                  {{$like->created_at}} / {{$like->user->name??'Unknown'}} / {{$like->id}}
+                  {{$likedPost->created_at}} / {{$likedPost->user->name??'Unknown'}} / {{$likedPost->id}}
                 </p>
 
                   {{-- <p>
@@ -53,7 +53,20 @@
                   </form>
                 </p>
               --}}
-
+              <p>
+                <form method="POST" action="{{ route('likes.store') }}">
+                  @csrf
+                  <input type="hidden" name="post_id" value="{{ $likedPost->id }}">
+                  <button type="submit" class="mt-8 hover:opacity-75">
+                      @if(auth()->check() && auth()->user()->likedPosts()->where('post_id', $likedPost->id)->exists())
+                          <i class="fas fa-heart"></i>
+                      @else
+                          <i class="far fa-heart"></i> 
+                      @endif
+                      <span class="mx-2">{{$likedPost->likedby->count()}}</span>
+                  </button>
+                </form>
+              </p>
               </div>
             </div>
           @endforeach

@@ -76,7 +76,7 @@ Route::get('user/{user}/followings', [UserController::class, 'followings'])->nam
 Route::get('user/{user}/followers', [UserController::class, 'followers'])->name('user.followers');
 Route::post('store', [FollowController::class, 'store'])->name('follows.store');
 Route::post('follow', [FollowController::class, 'createFollowRequestJob'])->name('follows.createFollowRequestJob');
-Route::delete('unfollow/{user}', [FollowController::class, 'unfollow'])->name('follows.unfollow');
+Route::delete('follow/{user}', [FollowController::class, 'destroy'])->name('follows.destroy');
 Route::post('respondToFollowRequest', [FollowController::class, 'respondToFollowRequest'])->name('follows.respondToFollowRequest');
 
 
@@ -93,7 +93,7 @@ Route::get('post/api', [PostController::class, 'api'])->name('post.api');
 Route::get('post/result', [PostController::class, 'currentLocation'])->name('post.currentLocation');
 
 
-Route::post('post/{post}/like', [LikeController::class, 'like'])->name('like');
+Route::post('likes', [LikeController::class, 'store'])->name('likes.store');
 Route::get('/like', [likeController::class, 'index'])->name('like.index');
 Route::get('/likes/test', [likeController::class, 'test'])->name('likes.test');
 

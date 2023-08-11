@@ -3,42 +3,37 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Jobs\SendLikedPostNotificationJob;
 use App\Models\Post;
 use App\Models\User;
 
 
 class LikeController extends Controller
 {
-    public function like(Post $post) {
-    
-    if ($post->likedBy->contains(auth()->user())) {
-        auth()->user()->likedPosts()->detach($post);
-    } else {
-        auth()->user()->likedPosts()->attach($post);
+    public function index()
+    {
+        $likedPosts = auth()->user()->likedPosts()->orderBy('pivot_created_at', 'desc')->get();
+
+        return view('like.index', compact('likedPosts'));
     }
 
-    return back();
-    }
+    public function store(Request $request)
+    {
+        $post = Post::findOrFail($request->input('post_id'));
+        $hasAlreadyLiked = $post->likedBy->contains(auth()->user());
 
-    // public function index() {
+        if ($hasAlreadyLiked) {
+            auth()->user()->likedPosts()->detach($post);
+        } else {
+            auth()->user()->likedPosts()->attach($post);
+            $user = auth()->user();
 
-    //     $likes = auth()->user()->likes()->get();
-    //     $sortedLikes = $likes->sortByDesc(function ($like) {
-    //         return $like->pivot->created_at;
-    //     });
+            // dispatch(new SendLikedPostJob($followerId, $followeeId));
+            SendLikedPostNotificationJob::dispatch($post, $user);
+        }
 
-    //     return view('like.index', compact('sortedLikes'));
-    // }
 
-    public function nagi() {
-        $user = User::find(1);
-        dd($user->likedPosts);
-    }
-
-    public function index() {
-        $likes = auth()->user()->likedPosts()->orderBy('pivot_created_at', 'desc')->get();
-
-        return view('like.index', compact('likes'));
+        return back();
     }
 
     // public function index() {

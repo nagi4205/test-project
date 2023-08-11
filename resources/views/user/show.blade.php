@@ -37,7 +37,7 @@
         </a>
       @else
         @if($alreadyFollowing)
-          <form action="{{ route('follows.unfollow', ['user' => $user->id]) }}" method="POST">
+          <form action="{{ route('follows.destroy', ['user' => $user->id]) }}" method="POST">
             @csrf
             @method('delete')
             <x-primary-button type="submit">
@@ -112,7 +112,7 @@
       </div>
 
       <p>
-        <form method="POST" action="{{ route('like', $post) }}">
+        <form method="POST" action="{{ route('likes.store', $post) }}">
           @csrf
           <button type="submit" class="mt-8 hover:opacity-75">
               @if(auth()->check() && auth()->user()->likedPosts()->where('post_id', $post->id)->exists())

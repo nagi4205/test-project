@@ -29,6 +29,23 @@ class PostController extends Controller
             $posts = Post::with('user')->get();
         }
 
+        if(auth()->check()){
+            $user = auth()->user();
+            $likedPostIds = $user->likedPosts()->pluck('posts.id')->toArray();
+
+            foreach ($posts as $post) {
+                $post->hasLiked = in_array($post->id, $likedPostIds);
+            }
+        } else {
+            foreach ($posts as $post) {
+                $post->hasLiked = false;
+            }
+        }
+
+        // foreach($posts as $post) {
+        //     $hasLikedPost = auth()->check() && auth()->user()->likedPosts()->where('post_id', $post->id)->exists();
+        // }
+
         return view('post.index', compact('posts'));
     }
 

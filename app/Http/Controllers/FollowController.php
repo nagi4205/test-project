@@ -110,7 +110,7 @@ class FollowController extends Controller
         return back()->with('message', 'フォローリクエストが見つかりませんでした。');
     }
 
-    public function unfollow(User $user) {
+    public function destroy(User $user) {
         // ログイン中のユーザーを取得
         $currentUser = Auth::user();
 
