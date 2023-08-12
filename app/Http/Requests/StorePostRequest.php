@@ -27,6 +27,7 @@ class StorePostRequest extends FormRequest
             'latitude' => 'nullable | numeric',
             'longitude' => 'nullable | numeric',
             'tag' => 'required | exists:tags,id',
+            'location_name' => 'nullable',
         ];
     }
 }

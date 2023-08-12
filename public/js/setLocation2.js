@@ -1,20 +1,34 @@
 function setLocation(pos) {
 
-  // 緯度・経度を取得
   const lat = pos.coords.latitude;
   const lng = pos.coords.longitude;
-  // 定数lat,lng をconsoleに出力
+
+  $("#latitude").val(lat);
+  $("#longitude").val(lng);
+
   console.log(lat);
   console.log(lng);
 
-  // post.searchの中からlat_inputのclassを見つけて、そのvalueに、定数latを代入
-  // post.createにlat,lngデータをコントローラに渡すため、".lat_input"を"#latitude"に変更
-  $("#latitude").val(lat);
-  // // post.searchの中からlng_inputのclassを見つけて、そのvalueに、定数lngを代入
-  $("#longitude").val(lng);
+  fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyDLm3FiiHj5SL12ki1Nigf2P9i9irwpXZU&language=ja`)
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+    let components = [];
+    for (let component of data.results[0].address_components) {
+      if (component.types.includes("administrative_area_level_1") || component.types.includes("locality") || component.types.includes("sublocality_level_1") || component.types.includes("sublocality_level_2")) {
+        components.unshift(component.long_name); // componentsという配列の先頭にcomponent.long_nameを追加
+      }
+    }
+    let address = components.join(' ');
+    console.log(address);
+    $("#location_name").val(address);
+
+  })
+  .catch(error => {
+    console.error("Geocodingエラー:", error);
+  });
 }
 
-// エラー時に呼び出される関数
 function showErr(err) {
   switch (err.code) {
       case 1 :
@@ -43,6 +57,8 @@ if ("geolocation" in navigator) {
 } else {
   alert("ブラウザが位置情報取得に対応していません");
 }
+
+
 
 // $('.btn').prop('disabled', false) //post.searchのボタンを押せるようになる
 

@@ -15,6 +15,7 @@ class Post extends Model
         'image',
         'latitude',
         'longitude',
+        'location_name',
         'user_id',
     ];
 

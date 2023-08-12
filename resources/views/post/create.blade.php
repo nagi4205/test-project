@@ -37,9 +37,10 @@
                 <input type="file" class="form-control-file" name="image" id="image" >
             </div>
 
-            {{-- 位置情報をコントローラに渡す --}}
             <input type="hidden" id="latitude" name="latitude">
             <input type="hidden" id="longitude" name="longitude">
+            <input type="hidden" id="location_name" name="location_name">
+
 
             <x-primary-button class="mt-8 hover:opacity-75">
                 送信する
