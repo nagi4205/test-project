@@ -27,7 +27,6 @@ class LikeController extends Controller
         } else {
             auth()->user()->likedPosts()->attach($post);
             $user = auth()->user();
-
             // dispatch(new SendLikedPostJob($followerId, $followeeId));
             SendLikedPostNotificationJob::dispatch($post, $user);
         }
