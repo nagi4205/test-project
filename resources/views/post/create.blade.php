@@ -13,7 +13,7 @@
         @endif --}}
         <x-message :message="session('message')" />
         
-        <form method="post" action="{{ route('post.store') }}" enctype="multipart/form-data">
+        <form method="post" action="{{ route('posts.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="w-full flex flex-col">
                 <label for="tag" class="font-semibold mt-4">タグ</label>
@@ -48,7 +48,7 @@
         </form>
 
         <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-        <script src="{{ asset('/js/setLocation2.js') }}"></script>
+        <script src="{{ asset('js/addLocationStorePost.js') }}"></script>
         {{-- マップを表示させるためのAPI　<script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key=AIzaSyDLm3FiiHj5SL12ki1Nigf2P9i9irwpXZU&callback=initMap" async defer></script> --}}
     </div>
     

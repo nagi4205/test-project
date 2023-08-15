@@ -3,11 +3,11 @@ function setLocation(pos) {
   const lat = pos.coords.latitude;
   const lng = pos.coords.longitude;
 
-  $("#latitude").val(lat);
-  $("#longitude").val(lng);
-
   console.log(lat);
   console.log(lng);
+
+  $("#latitude").val(lat);
+  $("#longitude").val(lng);
 
   fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyDLm3FiiHj5SL12ki1Nigf2P9i9irwpXZU&language=ja`)
   .then(response => response.json())

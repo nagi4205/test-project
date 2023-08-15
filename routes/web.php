@@ -44,12 +44,14 @@ Route::get('/', function () {
 });
 
 Route::middleware(['dailyForm'])->group(function() {
-    Route::resource('post', PostController::class);
+    Route::resource('posts', PostController::class);
     Route::resource('post.comment', CommentController::class);
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 });
+
+Route::get('fetchposts', [PostController::class, 'fetchposts'])->name('post.fetchposts');
 
 Route::get('/test-notification', function () {
     $user = User::find(1);
