@@ -4,7 +4,7 @@
     <p class="mb-4">{{ $notification->data['follower_name'] }}さんからフォロー申請が届いています。</p>
   </div>
 </a>
-<form method="post" action="{{ route('follows.respondToFollowRequest') }}">
+<form method="post" action="{{ route('follow_responses.store') }}">
   @csrf
   <input type="hidden" name="follower_id" value="{{ $notification->data['follower_id'] }}">
   <input type="hidden" name="notification_id" value="{{ $notification->id }}">

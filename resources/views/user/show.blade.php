@@ -29,14 +29,14 @@
     </div>
 
     <div class="mt-8">
-      @if($ViewingOwnProfile)
+      @if($isOwnProfile)
         <a href="{{ route('profile.edit') }}" class="primary-button">
           <button class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-full border border-transparent font-semibold text-indigo-500 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800">
             プロフィール編集
           </button>
         </a>
       @else
-        @if($alreadyFollowing)
+        @if($hasFollowed)
           <form action="{{ route('follows.destroy', ['user' => $user->id]) }}" method="POST">
             @csrf
             @method('delete')
@@ -44,12 +44,12 @@
               フォロー解除
             </x-primary-button>
           </form>
-        @elseif($alreadyRejected)
+        @elseif($hasRejected)
           <x-primary-button>
             拒否されました
           </x-primary-button>
         @else
-          <form action="{{ route('follows.createFollowRequestJob') }}" method="POST">
+          <form action="{{ route('follows.store') }}" method="POST">
             @csrf
             <input type="hidden" name="user_id" value="{{ $user->id }}">
             <x-primary-button type="submit">
@@ -62,10 +62,10 @@
   </div>
 
   <div class="flex ml-4 gap-x-8">
-    <a href="{{ route('user.followings', ['user' => $user->id]) }}">
+    <a href="{{ route('following.index', ['user' => $user->id]) }}">
       <p>フォロー中{{ $followingsCount }}</p>
     </a>
-    <a href="{{ route('user.followers', ['user' => $user->id]) }}">
+    <a href="{{ route('follower.index', ['user' => $user->id]) }}">
       <p>フォロワー{{ $followersCount }}</p>
     </a>
   </div>

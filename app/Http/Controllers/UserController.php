@@ -18,32 +18,16 @@ class UserController extends Controller
                     },
                 ]);
 
-        $ViewingOwnProfile = auth()->id() === $user->id;
-        $alreadyFollowing = auth()->user()->follows()->where('followee_id', $user->id)
+        $isOwnProfile = auth()->id() === $user->id;
+        $hasFollowed = auth()->user()->follows()->where('followee_id', $user->id)
                                                      ->where('status', 'approved')
                                                      ->exists();
-        $alreadyRejected = auth()->user()->follows()->where('followee_id', $user->id)
+        $hasRejected = auth()->user()->follows()->where('followee_id', $user->id)
                                                     ->where('status', 'rejected')
                                                     ->exists();
         $followingsCount = $user->followingUsers->count();
         $followersCount = $user->followerUsers->count();
 
-        return view('user.show', compact('user', 'ViewingOwnProfile', 'alreadyFollowing', 'alreadyRejected', 'followingsCount', 'followersCount'));
-    }
-
-    public function followings(User $user) {
-        $followingUsersCollection = $user->followingUsers()->wherePivot('status', 'approved')
-                                      ->orderBy('updated_at', 'desc')
-                                      ->get();
-
-        return view('user.followings', ['followingUsersCollection' => $followingUsersCollection]);
-    }
-
-    public function followers(User $user) {
-        $followerUsersCollection = $user->followerUsers()->wherePivot('status', 'approved')
-                                      ->orderBy('updated_at', 'desc')
-                                      ->get();
-
-        return view('user.followers', ['followerUsersCollection' => $followerUsersCollection]);
+        return view('user.show', compact('user', 'isOwnProfile', 'hasFollowed', 'hasRejected', 'followingsCount', 'followersCount'));
     }
 }

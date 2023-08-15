@@ -1,3 +1,6 @@
+// いらないファイル
+
+
 // googleMapsAPIを持ってくるときに,callback=initMapと記述しているため、initMap関数を作成
 function initMap() {
   // welcome.blade.phpで描画領域を設定するときに、id=mapとしたため、その領域を取得し、mapに格納します。

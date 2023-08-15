@@ -8,6 +8,7 @@ use App\Models\Notification;
 
 class NotificationResponseController extends Controller
 {
+    //いらない？
     public function store(Notification $notification, Request $request) {
         
         $validated = $request->validate([

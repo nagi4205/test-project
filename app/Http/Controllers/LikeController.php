@@ -32,24 +32,6 @@ class LikeController extends Controller
             SendLikedPostNotificationJob::dispatch($post, $user);
         }
 
-
         return back();
-    }
-
-    // public function index() {
-    //     $likes = auth()->user()
-    //         ->likes()
-    //         ->join('likes', 'likes.post_id', '=', 'posts.id')
-    //         ->orderBy('likes.created_at', 'desc')
-    //         ->get();
-    
-    //     return view('like.index', compact('likes'));
-    // }
-    
-
-    
-    
-    public function test() {
-        return view('like.test');
     }
 }

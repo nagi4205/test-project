@@ -42,10 +42,6 @@ class PostController extends Controller
             }
         }
 
-        // foreach($posts as $post) {
-        //     $hasLikedPost = auth()->check() && auth()->user()->likedPosts()->where('post_id', $post->id)->exists();
-        // }
-
         return view('post.index', compact('posts'));
     }
 
@@ -57,7 +53,6 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
-        // dd($request);
         $validated = $request->validated();
 
         $image = $request->file('image');
@@ -120,36 +115,6 @@ class PostController extends Controller
         });
     
         return redirect()->route('post.index');
-    }
-
-    public function search()
-    {
-        return view('post.search');
-    }
-
-    public function api()
-    {
-        return view('post.api');
-    }
-
-    public function currentLocation(Request $request)
-    {
-        $lat = $request->lat;
-        $lng = $request->lng;
-
-        return view('post.currentLocation', [
-            'lat' => $lat,
-            'lng' => $lng,
-        ]);
-    }
-
-    public function count()
-    {
-        $user = auth()->user();
-
-        $attendanceCount = $user->notificationResponse()->where('response', 'Yes')->count();
-
-        echo "あなたの出勤日数は".$attendanceCount."日です。";
     }
 }
 

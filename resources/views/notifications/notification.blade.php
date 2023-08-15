@@ -1,7 +1,7 @@
 <x-app-layout>
   <x-slot name="header">
       <h2 class="fles justify-end font-semibold text-xl text-gray-800 leading-tight">
-          RainMood
+          通知
       </h2>
   </x-slot>
 

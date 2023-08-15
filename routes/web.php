@@ -8,6 +8,9 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FollowController;
+use App\Http\Controllers\FollowResponseController;
+use App\Http\Controllers\FollowingController;
+use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\NotificationResponseController;
 use App\Http\Controllers\DailyMoodController;
 use Illuminate\Support\Facades\Route;
@@ -72,26 +75,21 @@ Route::get('test2', [TestController::class, 'test2']);
 
 Route::get('user/{id}/show', [UserController::class, 'show']);
 Route::get('user/{user}', [UserController::class, 'show'])->name('user.show');
-Route::get('user/{user}/followings', [UserController::class, 'followings'])->name('user.followings');
-Route::get('user/{user}/followers', [UserController::class, 'followers'])->name('user.followers');
-Route::post('store', [FollowController::class, 'store'])->name('follows.store');
-Route::post('follow', [FollowController::class, 'createFollowRequestJob'])->name('follows.createFollowRequestJob');
+
+Route::get('following/{user}/', [FollowingController::class, 'index'])->name('following.index');
+Route::get('followers/{user}', [FollowerController::class, 'index'])->name('follower.index');
+
+Route::post('follows', [FollowController::class, 'store'])->name('follows.store');
 Route::delete('follow/{user}', [FollowController::class, 'destroy'])->name('follows.destroy');
-Route::post('respondToFollowRequest', [FollowController::class, 'respondToFollowRequest'])->name('follows.respondToFollowRequest');
+
+Route::post('follow_responses', [FollowResponseController::class, 'store'])->name('follow_responses.store');
 
 
 
 Route::get('/notification', [NotificationController::class, 'index'])->name('notification.index');
-Route::get('/notification2', [NotificationController::class, 'index2'])->name('notification.index2');
-
-Route::get('post/search', [PostController::class, 'search'])->name('post.search');
+Route::get('/shit', [NotificationController::class, 'shit'])->name('notification.shit');
 
 Route::post('notification/{notification}/response', [NotificationResponseController::class, 'store'])->name('notification.response.store');
-Route::get('notification/count', [PostController::class, 'count'])->name('notificaiton.count');
-
-Route::get('post/api', [PostController::class, 'api'])->name('post.api');
-Route::get('post/result', [PostController::class, 'currentLocation'])->name('post.currentLocation');
-
 
 Route::post('likes', [LikeController::class, 'store'])->name('likes.store');
 Route::get('/like', [likeController::class, 'index'])->name('like.index');
