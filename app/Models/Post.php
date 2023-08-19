@@ -16,6 +16,7 @@ class Post extends Model
         'latitude',
         'longitude',
         'location_name',
+        'parent_id',
         'user_id',
     ];
 
@@ -33,6 +34,14 @@ class Post extends Model
 
     public function likedBy() {
         return $this->belongsToMany(User::class, 'likes')->withTimestamps();
+    }
+
+    public function parent() {
+        return $this->belongsTo(Post::class, 'parent_id');
+    }
+
+    public function children() {
+        return $this->hasMany(Post::class, 'parent_id');
     }
 
     public function scopeWithinDistance($query, $lat, $lng, $radius = 3) {

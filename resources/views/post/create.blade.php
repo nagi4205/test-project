@@ -40,7 +40,9 @@
             <input type="hidden" id="latitude" name="latitude">
             <input type="hidden" id="longitude" name="longitude">
             <input type="hidden" id="location_name" name="location_name">
-
+            @if(request('parent_id'))
+                <input type="hidden" name="parent_id" value="{{ request('parent_id') }}">
+            @endif
 
             <x-primary-button class="mt-8 hover:opacity-75">
                 送信する

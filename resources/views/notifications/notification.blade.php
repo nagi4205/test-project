@@ -16,14 +16,17 @@
   <div class="mx-auto px-6">
     @foreach($notifications as $notification)
     <div class="notification w-full p-4 border rounded-sm m-4">
-      @switch($notification->type)
-        @case('App\Notifications\LikedPostNotification')
+      @switch($notification->getTypeKey())
+        @case('liked_post')
           @include('notifications.partials.likedPost')
           @break
-        @case('App\Notifications\NewFollowRequestNotification')
+        @case('follow_request')
           @include('notifications.partials.followRequest')
           @break
+        @default
+          @include('notifications.partials.unknown')
       @endswitch
+      {{-- {!! $renderedNotifications[$loop->index] !!} --}}
     </div>
     @endforeach
     <div class="mb-4">

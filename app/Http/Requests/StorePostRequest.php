@@ -28,6 +28,7 @@ class StorePostRequest extends FormRequest
             'longitude' => 'nullable | numeric',
             'tag' => 'required | exists:tags,id',
             'location_name' => 'nullable',
+            'parent_id' => 'nullable',
         ];
     }
 }

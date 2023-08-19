@@ -60,6 +60,10 @@ class User extends Authenticatable
         return $this->hasMany(UserDailyStatus::class);
     }
 
+    public function notifications() {
+        return $this->hasMany(Notification::class);
+    }
+
     public function notificationResponse() {
         return $this->hasMany(notificationResponse::class);
     }

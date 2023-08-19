@@ -1,3 +1,4 @@
+<div class="w-full lg:w-2/3 bg-gray-200">
 @foreach($filteredPosts as $post)
 <div class="mt-4 p-4 w-full rounded-2xl">
   {{--  --}}
@@ -94,24 +95,31 @@
       </form>
       @endif
     </p> --}}
-
-    <!-- お気に入り追加/削除ボタン -->
-    <p>
-      <form method="POST" action="{{ route('likes.store') }}">
+    <div class="flex gap-x-8 pt-4">
+      <a href="{{ route('posts.create', ['parent_id' => $post->id])}}">
+        <i class="fa-regular fa-comment-dots"></i>
+      </a>
+      <form method="POST" action="{{ route('likes.store') }}" class="flex items-center like-form">
         @csrf
         <input type="hidden" name="post_id" value="{{ $post->id }}">
-        <button type="submit" class="mt-8 hover:opacity-75">
-            @if($post->hasLiked)
-                <i class="fas fa-heart"></i>
-            @else
-                <i class="far fa-heart"></i> 
-            @endif
-            <span class="mx-2">{{$post->likedby->count()}}</span>
+        <button type="button" class="hover:opacity-75 like-button">
+          @if($post->hasLiked)
+            <i class="fas fa-heart"></i>
+          @else
+            <i class="far fa-heart"></i> 
+          @endif
+          <span class="mx-2 like-count">{{$post->likedby->count()}}</span>
         </button>
       </form>
-    </p>
-  
-
+    </div>
   </div>
 </div>
+{{-- @if($post->children->count())
+<div class="replies">
+    @foreach($post->children as $child)
+        <p>{{ $chld->content }}</p>
+    @endforeach
+</div>
+@endif --}}
 @endforeach
+</div>

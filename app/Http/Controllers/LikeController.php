@@ -21,16 +21,21 @@ class LikeController extends Controller
     {
         $post = Post::findOrFail($request->input('post_id'));
         $hasAlreadyLiked = $post->likedBy->contains(auth()->user());
+        $data = [];
 
         if ($hasAlreadyLiked) {
             auth()->user()->likedPosts()->detach($post);
+            $data['status'] = 'unliked';
         } else {
             auth()->user()->likedPosts()->attach($post);
             $user = auth()->user();
+            $data['status'] = 'liked';
+
             // dispatch(new SendLikedPostJob($followerId, $followeeId));
             SendLikedPostNotificationJob::dispatch($post, $user);
         }
 
-        return back();
+        $data['count'] = $post->likedby->count();
+        return response()->json($data);
     }
 }

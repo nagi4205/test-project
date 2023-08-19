@@ -25,6 +25,7 @@ class SendLikedPostNotificationJob implements ShouldQueue
         $this->post = $post;
         $this->user = $user;
         Log::info("In Job constructor: いいねは{$this->post}です。");
+        Log::info("{$this->user}");
     }
 
     /**

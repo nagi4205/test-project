@@ -258,7 +258,7 @@
     </nav>
 
     @if(Auth::check())
-      <div class="mt-56 p-4 w-full rounded-2xl">
+      <div class="mt-44 p-4 w-full rounded-2xl">
           <div class="pl-6 lg:pl-3 xl:pl-0 pr-6 py-3">
           <a href="{{ route('user.show', ['user' => $user->id]) }}">
               <div class="flex items-center gap-x-2">
