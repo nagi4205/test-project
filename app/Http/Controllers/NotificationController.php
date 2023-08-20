@@ -11,9 +11,15 @@ class NotificationController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $notifications = $user->notifications()->orderBy('created_at', 'desc')->paginate(10);
+        $notifications = $user->customNotifications()->orderBy('created_at', 'desc')->get();
+
+        $multipliedNotifications = $notifications->map(function ($notification) {
+            $notificationData = json_decode($notification->data, true);
+            $notification->data = $notificationData;
+            return $notification;
+        });
         
-        return view('notifications.notification', ['notifications' => $notifications,]);
+        return view('notifications.notification', ['notifications' => $multipliedNotifications,]);
     }
 
     public function fakeIndex()

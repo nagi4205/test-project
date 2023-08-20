@@ -19,10 +19,10 @@
       @switch($notification->getTypeKey())
         @case('liked_post')
           @include('notifications.partials.likedPost')
-          @break
+        @break
         @case('follow_request')
           @include('notifications.partials.followRequest')
-          @break
+        @break
         @default
           @include('notifications.partials.unknown')
       @endswitch
@@ -30,7 +30,7 @@
     </div>
     @endforeach
     <div class="mb-4">
-      {{ $notifications->links() }}
+      {{-- {{ $notifications->links() }} --}}
     </div>
   </div>
 </x-app-layout>

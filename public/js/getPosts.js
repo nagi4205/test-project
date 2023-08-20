@@ -53,6 +53,8 @@
           success: function(data) {
               $('#containerForPosts').html(data);
               hideLoading();
+
+              initializeLikeButtons();
           },
           error: function(error) {
               alert('Error fetching posts!');
