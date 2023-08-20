@@ -74,6 +74,11 @@ class PostController extends Controller
             $likedPostIds = $user->likedPosts()->pluck('posts.id')->toArray();
 
             foreach ($filteredPosts as $post) {
+
+                if($post->parent_id) {
+                    $post->parent->hasLiked = in_array($post->parent->id, $likedPostIds);
+                }
+                
                 $post->hasLiked = in_array($post->id, $likedPostIds);
             }
         } else {

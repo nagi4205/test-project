@@ -48,7 +48,7 @@
           data: {
               latitude: latitude,
               longitude: longitude,
-              radius: 5 // この数値も変更可能です
+              radius: 2 // この数値も変更可能です
           },
           success: function(data) {
               $('#containerForPosts').html(data);
