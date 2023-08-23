@@ -10,7 +10,7 @@
             @endisset
             <div class="grow">
               <span class="block text-sm font-semibold text-gray-800 dark:text-gray-200">{{ $post->parent->user->name }}</span>
-              <span class="block text-sm font-semibold text-gray-900 dark:text-white">{{ $post->parent->user->name }}</span>
+              {{-- <span class="block text-sm font-semibold text-gray-900 dark:text-white">{{ $post->parent->user->name }}</span> --}}
               <span class="block text-sm text-gray-500">{{ $post->parent->user->email }}</span>
             </div>
           </div>
@@ -65,17 +65,17 @@
   @isset($post->parent->image)
     <img src="{{ Storage::url($post->parent->image) }}" >
   @endisset
-  <p class="text-gray-600 dark:text-gray-400">
+  <p class="py-4 font-medium text-gray-600 dark:text-gray-50">
     {{$post->parent->content}}
   </p>
-  <div class="p-4 text-sm">
-    <p class="text-sm text-gray-600 dark:text-gray-400">
-      {{$post->parent->location_name}} / {{$post->parent->created_at}}
+  <div class="pb-2 text-sm font-light">
+    <p class="text-gray-600 dark:text-gray-400">
+      {{$post->parent->location_name}} / {{$post->parent->formatted_created_at}}
     </p>
     <p>
-      @foreach($post->parent->tags as $tag)
+      {{-- @foreach($post->parent->tags as $tag)
         {{$tag->name}}
-      @endforeach
+      @endforeach --}}
     </p>
 
     {{-- <p>
@@ -95,9 +95,9 @@
     </p> --}}
     <div class="flex gap-x-4 pt-4">
       <a href="{{ route('posts.create', ['parent_id' => $post->parent->id])}}" class="flex items-center w-12 h-4">
-        <i class="fa-regular fa-comment-dots"></i>
+        <i class="fa-regular fa-comment-dots dark:text-gray-400"></i>
         @if($post->parent->children->count())
-          <span class="mx-2">{{ $post->parent->children->count() }}</span>
+          <span class="mx-2 dark:text-gray-400">{{ $post->parent->children->count() }}</span>
         @endif
       </a>
       <form method="POST" action="{{ route('likes.store') }}" class="flex items-center justify-between w-12 h-4 like-form">
@@ -105,11 +105,11 @@
         <input type="hidden" name="post_id" value="{{ $post->parent->id }}">
         <button type="button" class="hover:opacity-75 like-button">
           @if($post->parent->hasLiked)
-            <i class="fas fa-heart"></i>
+            <i class="fas fa-heart text-pink-500"></i>
           @else
-            <i class="far fa-heart"></i> 
+            <i class="far fa-heart dark:text-gray-400"></i> 
           @endif
-          <span class="mx-2 like-count">{{$post->parent->likedby->count()}}</span>
+          <span class="mx-2 dark:text-gray-400 like-count">{{$post->parent->likedby->count()}}</span>
         </button>
       </form>
     </div>

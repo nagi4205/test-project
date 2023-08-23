@@ -58,7 +58,10 @@ class PostController extends Controller
             $lat = $request->input('latitude');
             $lng = $request->input('longitude');
             $radius = $request->input('radius');
-            $filteredPosts = Post::with('user')->withinDistance($lat, $lng, $radius)->get();
+            $filteredPosts = Post::with('user')
+                                 ->withinEasyDistance($lat, $lng, $radius)
+                                 ->orderBy('created_at', 'desc')
+                                 ->get();
             Log::info("位置情報でソート");
 
         } elseif ($request->has('fetchFollowingPosts')) {
@@ -78,7 +81,7 @@ class PostController extends Controller
                 if($post->parent_id) {
                     $post->parent->hasLiked = in_array($post->parent->id, $likedPostIds);
                 }
-                
+
                 $post->hasLiked = in_array($post->id, $likedPostIds);
             }
         } else {
@@ -131,6 +134,45 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
         $validated = $request->validated();
+
+        if (isset($validated['parent_id'])) {
+            $parentPost = Post::find($validated['parent_id']);
+    
+            if (!$parentPost) {
+                return back()->withErrors(['message' => '親の投稿が見つかりません。']);
+            }
+    
+            $currentUser = auth()->user();
+    
+            if ($parentPost->user_id !== $currentUser->id || !$currentUser->FollowingUsers()->wherePivot('status', 'approved')->exists()) {
+                $isWithinDistance = Post::where('id', $parentPost->id)
+                                        ->withinEasyDistance($request->latitude, $request->longitude)
+                                        ->exists();
+                if (!$isWithinDistance) {
+                    return back()->withErrors(['message' => 'この投稿への返信は許可されていません。']);
+                }
+            }
+
+            $image = $request->file('image');
+
+            if ($request->hasFile('image')) {
+                $currentDateTime = now()->format('Ymd');
+                $filename = $currentDateTime.'_'.$request->file('image')->getClientOriginalName();
+                $path = $request->file('image')->storePubliclyAs('images', $filename);
+                $validated['image'] = $path;
+            } else {
+                $path = null;
+            }
+    
+            $validated['user_id'] = auth()->id();
+    
+            $post = Post::create($validated);
+            $post->tags()->attach($request->tag);
+
+            dd($post);
+    
+            return back()->with('message', '投稿を保存しました！');
+        }
 
         $image = $request->file('image');
 
