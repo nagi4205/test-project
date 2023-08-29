@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Jobs\SendFollowRequestJob;
+use App\Jobs\SendFollowRequestNotificationJob;
 use App\Models\Follow;
 use Carbon\Carbon;
 use App\Models\User;
@@ -50,7 +50,7 @@ class FollowController extends Controller
             ]);
         }
 
-        dispatch(new SendFollowRequestJob($followerId, $followeeId));
+        dispatch(new SendFollowRequestNotificationJob($followerId, $followeeId));
 
         return back()->with('message', 'フォロー申請を送りました。');
     }

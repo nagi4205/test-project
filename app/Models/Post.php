@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Presenters\PostPresenter;
 
 class Post extends Model
 {
@@ -44,6 +45,10 @@ class Post extends Model
         return $this->hasMany(Post::class, 'parent_id');
     }
 
+    public function present() {
+        return new PostPresenter($this);
+    }
+
     // public function scopeWithinDistance($query, $lat, $lng, $radius = 3) {
     // $query->whereRaw("
     //     ( 6371 * acos( cos( radians(?) ) *
@@ -68,18 +73,27 @@ class Post extends Model
     }
 
     public function getFormattedCreatedAtAttribute() {
-        $diffInMinutes = $this->created_at->diffInMinutes();
-        $diffInHours = $this->created_at->diffInHours();
-        $diffInDays = $this->created_at->diffInDays();
-
-        if ($diffInMinutes < 60) {
-            return "{$diffInMinutes} minutes ago";
-        } elseif ($diffInHours < 24) {
-            return "{$diffInHours} hours ago";
-        } elseif ($diffInDays < 7) {
-            return "{$diffInDays} days ago";
-        } else {
-            return $this->created_at->format('Y-m-d');
-        }
+        return $this->present()->formattedCreatedAt();
     }
+
+    // public function getFormattedCreatedAtAttribute() {
+    //     $post = new PostPresenter($this);
+    //     return $post->formattedCreatedAt();
+    // }
+
+    // public function getFormattedCreatedAtAttribute() {
+    //     $diffInMinutes = $this->created_at->diffInMinutes();
+    //     $diffInHours = $this->created_at->diffInHours();
+    //     $diffInDays = $this->created_at->diffInDays();
+
+    //     if ($diffInMinutes < 60) {
+    //         return "{$diffInMinutes} minutes ago";
+    //     } elseif ($diffInHours < 24) {
+    //         return "{$diffInHours} hours ago";
+    //     } elseif ($diffInDays < 7) {
+    //         return "{$diffInDays} days ago";
+    //     } else {
+    //         return $this->created_at->format('Y-m-d');
+    //     }
+    // }
 }

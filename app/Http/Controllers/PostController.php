@@ -169,7 +169,7 @@ class PostController extends Controller
             $post = Post::create($validated);
             $post->tags()->attach($request->tag);
 
-            dd($post);
+            // SendRepliedPostNotificationJob::dispatch();
     
             return back()->with('message', '投稿を保存しました！');
         }

@@ -29,6 +29,7 @@ class SendRepliedPostNotificationJob implements ShouldQueue
      */
     public function handle(): void
     {
-        
+        $parentPostUser = $this->repliedPost->parent->user;
+        $parentPostUser->notify(new RepliedToPostNotification($this->repliedPost));
     }
 }

@@ -3,6 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\CommunityPostController;
+use App\Http\Controllers\CommunityInvitationController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\LikeController;
@@ -18,6 +21,7 @@ use Illuminate\Support\Carbon;
 use App\Models\Notification; 
 // あとでけす
 use App\Models\User;
+use App\Models\Post;
 // use App\Notifications\AttendanceConfirmation;
 // use Illuminate\Notifications\Notification;
 use App\Notifications\AttendanceComfirmNotification;
@@ -51,6 +55,11 @@ Route::middleware(['dailyForm'])->group(function() {
     })->name('dashboard');
 });
 
+Route::resource('communities', CommunityController::class);
+Route::resource('community-posts', CommunityPostController::class);
+Route::get('community-invitations/{community}/show', [CommunityInvitationController::class, 'show'])->name('community-invitations.show');
+Route::post('community-invitations', [CommunityInvitationController::class, 'store'])->name('community-invitations.store');
+
 Route::get('fetchposts', [PostController::class, 'fetchposts'])->name('post.fetchposts');
 
 Route::get('/test-notification', function () {
@@ -58,6 +67,13 @@ Route::get('/test-notification', function () {
     $user->notify(new AttendanceComfirmNotification());
 
     return 'Notification sent!';
+});
+
+Route::get('/web', function() {
+    $posts = Post::get();
+    foreach($posts as $post) {
+        dd($post->web());
+    }
 });
 
 Route::get('/test-notifications', function (){

@@ -16,7 +16,7 @@
         <script src="https://kit.fontawesome.com/26cd3d4f75.js" crossorigin="anonymous"></script>
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div class="min-h-screen bg-white dark:bg-gray-900">
             @include('layouts.navigation')
 
             <!-- Page Heading -->
@@ -33,9 +33,9 @@
                 {{-- <div class="w-64 bg-white p-4 shadow-lg"> --}}
                     <main>
 
-
-                        @include('layouts.sidebar')
-
+                        <div class="bg-gray-50 dark:bg-slate-900">
+                            @include('layouts.sidebar')
+                        </div>
                         
                         
                         <div class="w-full pt-10 px-4 sm:px-6 md:px-8 lg:pl-72">

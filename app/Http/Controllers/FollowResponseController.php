@@ -28,6 +28,7 @@ class FollowResponseController extends Controller
 
             $followRequest->save();
 
+
             $notification = $request->user()->notifications()->where('id', $request->input('notification_id'))->first();
             if ($notification) {
                 $notification->delete();
