@@ -50,6 +50,7 @@ class CommunityInvitationController extends Controller
                 CommunityMember::create([
                     'community_id' => $validated['community_id'],
                     'user_id' => auth()->id(),
+                    'joined_at' => CommunityMember::currentTimestamp(),
                 ]);
                 CommunityInvitation::where('invitee_id', auth()->id())
                                    ->where('community_id', $validated['community_id'])

@@ -83,4 +83,8 @@ class User extends Authenticatable
     public function follows() {
         return $this->hasMany(Follow::class, 'follower_id');
     }
+
+    public function getLikedPostIdsForAuthenticatedUser() {
+        return $this->likedPosts()->pluck('posts.id')->toArray();
+    }
 }

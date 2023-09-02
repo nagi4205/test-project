@@ -77,11 +77,6 @@ class Post extends Model
     }
 
     // public function getFormattedCreatedAtAttribute() {
-    //     $post = new PostPresenter($this);
-    //     return $post->formattedCreatedAt();
-    // }
-
-    // public function getFormattedCreatedAtAttribute() {
     //     $diffInMinutes = $this->created_at->diffInMinutes();
     //     $diffInHours = $this->created_at->diffInHours();
     //     $diffInDays = $this->created_at->diffInDays();

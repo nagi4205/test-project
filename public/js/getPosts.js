@@ -43,7 +43,7 @@
   function fetchLocationPosts(latitude, longitude) {
       showLoading();
       $.ajax({
-          url: 'posts', // これはあなたのルートに応じて変更してください
+          url: 'posts',
           type: 'GET',
           data: {
               latitude: latitude,

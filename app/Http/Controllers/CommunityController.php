@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Community;
+use App\Models\CommunityMember;
 use App\Models\CommunityPost;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class CommunityController extends Controller
@@ -40,7 +42,7 @@ class CommunityController extends Controller
         $validated['owner_id'] = auth()->id();
 
         $community = Community::create($validated);
-        $community->communityMembers()->attach(auth()->id());
+        $community->communityMembers()->attach(auth()->id(), ['joined_at' => CommunityMember::currentTimestamp() ]);
 
         return redirect()->route('communities.index')->with('success', 'コミュニティが作成されました。');
     }

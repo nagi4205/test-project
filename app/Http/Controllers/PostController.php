@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Tag;
+use App\Services\PostService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StorePostRequest;
@@ -16,9 +17,16 @@ use Illuminate\Support\Facades\Gate;
 // notificationResponseモデル
 use App\Models\NotificationResponse;
 
-
 class PostController extends Controller
 {
+    private $postService;
+
+    public function __construct(PostService $postService)
+    {
+        $this->postService = $postService;
+    }
+
+
     // public function fetchposts(Request $request)
     // {
     //     if($request->has(['latitude', 'longitude', 'radius'])) {
@@ -46,53 +54,102 @@ class PostController extends Controller
     // }
 
 
+    //新index
+    private function isEmptyRequest(Request $request)
+    {
+        return !$request->hasAny(['latitude', 'longitude', 'radius', 'fetchFollowingPosts']);
+    }
+
+    private function fetchPostsBasedOnRequest(Request $request)
+    {
+        if($this->isLocationBasedRequest($request)) {
+            return $this->postService->getFilteredPostsByLocation(
+                $request->input('latitude'),
+                $request->input('longitude'),
+                $request->input('radius'),
+            );
+        }
+
+        if($this->isFollowingPostsRequest($request)) {
+            return $this->postService->getFilteredPostsByFollowingUsers();
+        }
+    }
+
+    private function isLocationBasedRequest(Request $request): bool
+    {
+        return $request->has(['latitude', 'longitude', 'radius']);
+    }
+
+    private function isFollowingPostsRequest(Request $request): bool
+    {
+        return $request->has('fetchFollowingPosts');
+    }
+
     public function index(Request $request)
     {
-        // リクエストに何も含まれていない場合
-        if (!$request->hasAny(['latitude', 'longitude', 'radius', 'fetchFollowingPosts'])) {
+        if ($this->isEmptyRequest($request)) {
             return view('post.index');
         }
-    
-        if ($request->has(['latitude', 'longitude', 'radius'])) {
 
-            $lat = $request->input('latitude');
-            $lng = $request->input('longitude');
-            $radius = $request->input('radius');
-            $filteredPosts = Post::with('user')
-                                 ->withinEasyDistance($lat, $lng, $radius)
-                                 ->orderBy('created_at', 'desc')
-                                 ->get();
-            Log::info("位置情報でソート");
+        $filteredPosts = $this->fetchPostsBasedOnRequest($request);
 
-        } elseif ($request->has('fetchFollowingPosts')) {
+        $likedPostIds = auth()->check() ? auth()->user()->getLikedPostIdsForAuthenticatedUser() : [];
 
-            $user = auth()->user();
-            $followingIds = $user->followingUsers()->pluck('users.id');
-            $filteredPosts = Post::whereIn('user_id', $followingIds)->with('user')->get();
-            Log::info("フォロワーでソート");
-        }
+        Log::info('$likedPostIds:'.json_encode($likedPostIds));
 
-        if (auth()->check()) {
-            $user = auth()->user();
-            $likedPostIds = $user->likedPosts()->pluck('posts.id')->toArray();
-
-            foreach ($filteredPosts as $post) {
-
-                if($post->parent_id) {
-                    $post->parent->hasLiked = in_array($post->parent->id, $likedPostIds);
-                }
-
-                $post->hasLiked = in_array($post->id, $likedPostIds);
-            }
-        } else {
-            foreach ($filteredPosts as $post) {
-                $post->hasLiked = false;
-            }
-        }
+        $this->postService->attachLikeStatusToPosts($filteredPosts, $likedPostIds);
         
         return view('post.components.componentForIndex', compact('filteredPosts'));
-        // return view('post.components.componentForIndex', compact('posts'))->render();
     }
+
+
+
+///旧index
+    // public function index(Request $request)
+    // {
+    //     // リクエストに何も含まれていない場合
+    //     if (!$request->hasAny(['latitude', 'longitude', 'radius', 'fetchFollowingPosts'])) {
+    //         return view('post.index');
+    //     }
+    
+    //     if ($request->has(['latitude', 'longitude', 'radius'])) {
+
+    //         $lat = $request->input('latitude');
+    //         $lng = $request->input('longitude');
+    //         $radius = $request->input('radius');
+    //         $filteredPosts = Post::with('user')
+    //                              ->withinEasyDistance($lat, $lng, $radius)
+    //                              ->orderBy('created_at', 'desc')
+    //                              ->get();
+
+    //     } elseif ($request->has('fetchFollowingPosts')) {
+
+    //         $user = auth()->user();
+    //         $followingIds = $user->followingUsers()->pluck('users.id');
+    //         $filteredPosts = Post::whereIn('user_id', $followingIds)->with('user')->get();
+    //     }
+
+    //     if (auth()->check()) {
+    //         $user = auth()->user();
+    //         $likedPostIds = $user->likedPosts()->pluck('posts.id')->toArray();
+
+    //         foreach ($filteredPosts as $post) {
+
+    //             if($post->parent_id) {
+    //                 $post->parent->hasLiked = in_array($post->parent->id, $likedPostIds);
+    //             }
+
+    //             $post->hasLiked = in_array($post->id, $likedPostIds);
+    //         }
+    //     } else {
+    //         foreach ($filteredPosts as $post) {
+    //             $post->hasLiked = false;
+    //         }
+    //     }
+
+    //     return view('post.components.componentForIndex', compact('filteredPosts'));
+    //     // return view('post.components.componentForIndex', compact('posts'))->render();
+    // }
 
     public function index2(Request $request)
     {
