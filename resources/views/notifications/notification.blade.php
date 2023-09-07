@@ -26,6 +26,9 @@
         @case('App\Notifications\CommunityInvitationNotification')
           @include('notifications.partials.communityInvitation')
         @break
+        @case('App\Notifications\RepliedCommunityInvitationNotification')
+          @include('notifications.partials.replied-community-invitation')
+        @break
         @default
           @include('notifications.partials.unknown')
       @endswitch

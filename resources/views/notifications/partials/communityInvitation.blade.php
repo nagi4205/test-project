@@ -7,6 +7,7 @@
 <form method="post" action="{{ route('community-invitations.store') }}">
   @csrf
   <input type="hidden" name="community_id" value="{{ $notification->data['community_id'] }}">
+  <input type="hidden" name="inviter_id" value="{{ $notification->data['inviter_id'] }}">
   <input type="hidden" name="notification_id" value="{{ $notification->id }}">
   <div class="flex">
     <div class="pr-4">

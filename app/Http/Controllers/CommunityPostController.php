@@ -29,7 +29,7 @@ class CommunityPostController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-                    'content' => 'required|max:32',
+                    'content' => 'required|max:500',
                     'community_id' => 'required',
         ]);
 

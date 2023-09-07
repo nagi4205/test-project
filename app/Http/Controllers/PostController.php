@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Services\PostService;
+use App\Services\CommunityService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StorePostRequest;
@@ -20,10 +21,12 @@ use App\Models\NotificationResponse;
 class PostController extends Controller
 {
     private $postService;
+    private $communityService;
 
-    public function __construct(PostService $postService)
+    public function __construct(PostService $postService, CommunityService $communityService)
     {
         $this->postService = $postService;
+        $this->communityService = $communityService;
     }
 
 
@@ -75,6 +78,18 @@ class PostController extends Controller
         }
     }
 
+    private function fetchCommunitiesBasedOnRequest(Request $request)
+    {
+        Log::info('fetchCommunitiesBasedOnRequestまできました。');
+        if($this->isLocationBasedRequest($request)) {
+            return $this->communityService->getFilteredCommunitiesByLocation(
+                $request->input('latitude'),
+                $request->input('longitude'),
+                $request->input('radius'),
+            );
+        }
+    }
+
     private function isLocationBasedRequest(Request $request): bool
     {
         return $request->has(['latitude', 'longitude', 'radius']);
@@ -92,14 +107,16 @@ class PostController extends Controller
         }
 
         $filteredPosts = $this->fetchPostsBasedOnRequest($request);
-
         $likedPostIds = auth()->check() ? auth()->user()->getLikedPostIdsForAuthenticatedUser() : [];
 
+        $filteredCommunities =  $this->fetchCommunitiesBasedOnRequest($request);
+
+        Log::info('$filteredCommunities:'.json_encode($filteredCommunities));
         Log::info('$likedPostIds:'.json_encode($likedPostIds));
 
         $this->postService->attachLikeStatusToPosts($filteredPosts, $likedPostIds);
         
-        return view('post.components.componentForIndex', compact('filteredPosts'));
+        return view('post.components.componentForIndex', compact('filteredPosts', 'filteredCommunities'));
     }
 
 

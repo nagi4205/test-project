@@ -13,6 +13,10 @@ class Community extends Model
         'name',
         'description',
         'status',
+        'community_image',
+        'latitude',
+        'longitude',
+        'location_name',
         'owner_id',
     ];
 
@@ -22,5 +26,18 @@ class Community extends Model
 
     public function communityPosts() {
         return $this->hasMany(CommunityPost::class);
+    }
+
+    public function scopeWithinEasyDistance($query, $lat, $lng, $radius = 3) {
+        $latDelta = $radius / 111;
+        $lngDelta = $radius / (111 * cos(deg2rad($lat)));
+    
+        $minLat = $lat - $latDelta;
+        $maxLat = $lat + $latDelta;
+        $minLng = $lng - $lngDelta;
+        $maxLng = $lng + $lngDelta;
+    
+        $query->whereBetween('latitude', [$minLat, $maxLat])
+              ->whereBetween('longitude', [$minLng, $maxLng]);
     }
 }

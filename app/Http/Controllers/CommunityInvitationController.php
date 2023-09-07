@@ -8,6 +8,7 @@ use App\Models\CommunityMember;
 use App\Models\CommunityInvitation;
 use App\Presenters\MessagePresenter;
 use App\Jobs\SendCommunityInvitationNotificationJob;
+use App\Jobs\SendRepliedCommunityInvitationNotificationJob;
 
 
 class CommunityInvitationController extends Controller
@@ -44,7 +45,8 @@ class CommunityInvitationController extends Controller
 
             case 'join':
                 $validated = $request->validate([
-                    'community_id' => 'required|integer|exists:communities,id'
+                    'community_id' => 'required|integer|exists:communities,id',
+                    'inviter_id' => 'required|integer|exists:users,id',
                 ]);
 
                 CommunityMember::create([
@@ -57,6 +59,9 @@ class CommunityInvitationController extends Controller
                                    ->delete();
 
                 $notification_id = $request->input('notification_id');
+                $validated['invitee_id'] = auth()->id();
+
+                SendRepliedCommunityInvitationNotificationJob::dispatch($validated['inviter_id'], $validated['invitee_id'], $validated['community_id']);
 
                 $notification = $request->user()->customNotifications()->where('id', $request->input('notification_id'))->first();
                 if ($notification) {

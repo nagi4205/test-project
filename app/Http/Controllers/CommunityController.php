@@ -6,11 +6,18 @@ use Illuminate\Http\Request;
 use App\Models\Community;
 use App\Models\CommunityMember;
 use App\Models\CommunityPost;
-use Carbon\Carbon;
+use App\Services\CommunityService;
 use Illuminate\Support\Facades\Log;
 
 class CommunityController extends Controller
 {
+    protected $communityService;
+
+    public function __construct(CommunityService $communityService)
+    {
+        $this->communityService = $communityService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -35,8 +42,21 @@ class CommunityController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:32',
-            'description' => 'nullable|string',
+            'description' => 'required|string',
+            'community_image' => 'nullable | max:2048 | mimes:jpg,jpeg,png,gif',
+            'latitude' => 'nullable | numeric',
+            'longitude' => 'nullable | numeric',
+            'location_name' => 'nullable',
         ]);
+
+        if ($request->hasFile('community_image')) {
+            $currentDateTime = now()->format('Ymd');
+            $filename = $currentDateTime.'_'.$request->file('community_image')->getClientOriginalName();
+            $path = $request->file('community_image')->storePubliclyAs('images', $filename);
+            $validated['community_image'] = $path;
+        } else {
+            $path = null;
+        }
 
         $validated['status'] = $request->has('status'); 
         $validated['owner_id'] = auth()->id();
@@ -53,9 +73,15 @@ class CommunityController extends Controller
     public function show(Community $community)
     {
         $communityPosts = $community->communityPosts()->get();
-        return view('communities.show', compact('community', 'communityPosts'));
-    }
+        $communityMembers = $community->communityMembers()->get();
 
+        $communityAvatarGroup = $this->communityService->getCommunityAvatarGroup($community->id);
+        $visibleMembers = $communityAvatarGroup['visible_members'];
+    
+        $additionalMembersCount = $communityAvatarGroup['additional_members_count'];
+
+        return view('communities.show', compact('community', 'communityPosts', 'communityMembers', 'visibleMembers', 'additionalMembersCount'));
+    }
     /**
      * Show the form for editing the specified resource.
      */

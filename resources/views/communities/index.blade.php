@@ -30,23 +30,20 @@
         <div class="p-4 sm:p-7">
           <div class="text-center">
             <h2 class="block text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-200">コミュニティーを作成しよう！</h2>
-            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              "Compare to" Price, Bulk Discount Pricing, Inventory Tracking
-              <a class="text-blue-600 decoration-2 hover:underline font-medium" href="../examples/html/modal-signup.html">
-                Sign up here
-              </a>
-            </p>
-            <div class="mt-5">
-              <a class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800" href="#">
-                <svg class="w-4 h-auto" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-                </svg>
-                Upgrade to get these features
-              </a>
+            <div class="mt-2">
+              <li class="flex space-x-3" id="locationStatus">
+                  <svg class="flex-shrink-0 h-6 w-6 text-green-300" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M15.1965 7.85999C15.1965 3.71785 11.8387 0.359985 7.69653 0.359985C3.5544 0.359985 0.196533 3.71785 0.196533 7.85999C0.196533 12.0021 3.5544 15.36 7.69653 15.36C11.8387 15.36 15.1965 12.0021 15.1965 7.85999Z" fill="currentColor" fill-opacity="0.1"/>
+                      <path d="M10.9295 4.88618C11.1083 4.67577 11.4238 4.65019 11.6343 4.82904C11.8446 5.00788 11.8702 5.32343 11.6914 5.53383L7.44139 10.5338C7.25974 10.7475 6.93787 10.77 6.72825 10.5837L4.47825 8.5837C4.27186 8.40024 4.25327 8.0842 4.43673 7.87781C4.62019 7.67142 4.93622 7.65283 5.14261 7.83629L7.01053 9.49669L10.9295 4.88618Z" fill="currentColor"/>
+                  </svg>
+                  <span class="text-gray-600 dark:text-gray-400" id="locationMessage">
+                    位置情報取得中...
+                  </span>
+              </li>
             </div>
           </div>
   
-          <form method="POST" action="{{ route('communities.store') }}">
+          <form method="POST" action="{{ route('communities.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="mt-8 sm:mt-10 divide-y divide-gray-200 dark:divide-gray-700">
               <p class="block font-semibold text-gray-800 dark:text-gray-200">コミュニティ名</p>
@@ -59,11 +56,18 @@
                 <input type="checkbox" name="status" id="hs-small-switch" class="relative shrink-0 w-11 h-6 bg-gray-100 checked:bg-none checked:bg-blue-600 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 border border-transparent ring-1 ring-transparent focus:border-blue-600 focus:ring-blue-600 ring-offset-white focus:outline-none appearance-none dark:bg-gray-700 dark:checked:bg-blue-600 dark:focus:ring-offset-gray-800 before:inline-block before:w-5 before:h-5 before:bg-white checked:before:bg-blue-200 before:translate-x-0 checked:before:translate-x-full before:shadow before:rounded-full before:transform before:ring-0 before:transition before:ease-in-out before:duration-200 dark:before:bg-gray-400 dark:checked:before:bg-blue-200">
                 <label for="hs-small-switch" class="text-sm text-gray-500 ml-3 dark:text-gray-400">Small</label>
               </div>
+              <div class="flex flex-col gap-y-2">
+                <label for="file-upload">ファイルを選択:</label>
+                <input type="file" name="community_image" id="file-upload">
+              </div>
+              <input type="hidden" id="latitude" name="latitude">
+              <input type="hidden" id="longitude" name="longitude">
+              <input type="hidden" id="location_name" name="location_name">
               <div class="flex justify-end items-center gap-x-2 p-4 sm:px-7 border-t dark:border-gray-700">
                 <button type="button" class="py-2.5 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-gray-800 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800" data-hs-overlay="#hs-modal-upgrade-to-pro">
                   Cancel
                 </button>
-                <x-primary-button class="mt-8 hover:opacity-75">
+                <x-primary-button class="mt-8 hover:opacity-75" id="submitPostButton">
                   作成！
                 </x-primary-button>
               </div>
@@ -137,5 +141,7 @@
     </div>
   </div>
   <!-- End Modal -->
+  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+  <script src="{{ asset('js/addLocationStoreCommunity.js') }}"></script>
 </x-app-layout>
 
