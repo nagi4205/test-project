@@ -17,8 +17,4 @@ class CommunityMember extends Model
     ];
 
     public $timestamps = false;
-
-    public static function currentTimestamp() {
-        return Carbon::now()->format('Y-m-d H:i:s');
-    }
 }

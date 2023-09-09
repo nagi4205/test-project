@@ -58,7 +58,7 @@ class PostController extends Controller
 
 
     //新index
-    private function isEmptyRequest(Request $request)
+    private function isEmptyRequest(Request $request): bool
     {
         return !$request->hasAny(['latitude', 'longitude', 'radius', 'fetchFollowingPosts']);
     }

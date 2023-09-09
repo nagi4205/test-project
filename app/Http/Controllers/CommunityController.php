@@ -62,7 +62,7 @@ class CommunityController extends Controller
         $validated['owner_id'] = auth()->id();
 
         $community = Community::create($validated);
-        $community->communityMembers()->attach(auth()->id(), ['joined_at' => CommunityMember::currentTimestamp() ]);
+        $community->communityMembers()->attach(auth()->id(), ['joined_at' => now()->format('Y-m-d H:i:s') ]);
 
         return redirect()->route('communities.index')->with('success', 'コミュニティが作成されました。');
     }
