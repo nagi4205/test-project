@@ -87,7 +87,7 @@ class CommunityController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        
     }
 
     /**

@@ -20,6 +20,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/ping', function() {
+    return response()->json(['message' => 'pong'], 200);
+});
+
 // テストすぐ消す
 Route::get('readUsersTable', [TestApiController::class, 'readUsersTable']);
 Route::post('location', [LocationController::class, 'store']);
