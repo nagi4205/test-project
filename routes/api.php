@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\TestApiController;
 use App\Http\Controllers\LocationController;
 
@@ -19,6 +20,8 @@ use App\Http\Controllers\LocationController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('posts', [PostController::class, 'index']);
 
 Route::get('/ping', function() {
     return response()->json(['message' => 'pong'], 200);

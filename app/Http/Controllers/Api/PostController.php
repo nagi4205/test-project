@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
@@ -66,6 +68,7 @@ class PostController extends Controller
     private function fetchPostsBasedOnRequest(Request $request)
     {
         if($this->isLocationBasedRequest($request)) {
+            Log::info('ここまできました。at_fetchPostsBasedOnRequest()');
             return $this->postService->getFilteredPostsByLocation(
                 $request->input('latitude'),
                 $request->input('longitude'),
@@ -100,7 +103,24 @@ class PostController extends Controller
         return $request->has('fetchFollowingPosts');
     }
 
-    public function index(Request $request)
+    ///すぐ消す
+    public function cat(Request $request)
+    {
+        $inputCats = $request->all();
+        return response()->json([
+            'status' => 'true',
+            'cat' => $inputCats,
+        ]);
+    }
+
+    ///すぐ消す
+    public function test(Request $request)
+    {
+        $posts = Post::all();
+        return response()->json($posts);
+    }
+
+    public function fakeindex(Request $request)
     {
         if ($this->isEmptyRequest($request)) {
             return view('post.index');
@@ -111,15 +131,44 @@ class PostController extends Controller
 
         $filteredCommunities =  $this->fetchCommunitiesBasedOnRequest($request);
 
-        Log::info('$filteredCommunities:'.json_encode($filteredCommunities));
-        Log::info('$likedPostIds:'.json_encode($likedPostIds));
+        Log::info('$filteredPosts:'.json_encode($filteredPosts));
+        // Log::info('$filteredCommunities:'.json_encode($filteredCommunities));
+        // Log::info('$likedPostIds:'.json_encode($likedPostIds));
 
         $this->postService->attachLikeStatusToPosts($filteredPosts, $likedPostIds);
-        
-        return view('post.components.componentForIndex', compact('filteredPosts', 'filteredCommunities'));
+
+        return response()->json(count($filteredPosts));
+        // return view('post.components.componentForIndex', compact('filteredPosts', 'filteredCommunities'));
     }
 
+    // ここから正しいindex
+    public function index(Request $request)
+    {
+        $filteredPosts = $this->fetchPostsBasedOnRequest($request);
 
+        // Log::info(first($filteredPosts));
+        
+        foreach($filteredPosts as $post) {
+            $post->image = $post->image ? Storage::url($post->image) : null;
+        }
+
+        // Log::info(first($filteredPosts));
+
+        Log::info('ここ:at_before_$likedPostIds');
+        $likedPostIds = auth()->check() ? auth()->user()->getLikedPostIdsForAuthenticatedUser() : [];
+
+        $filteredCommunities =  $this->fetchCommunitiesBasedOnRequest($request);
+
+        Log::info('$filteredPosts:'.json_encode($filteredPosts));
+        // Log::info('$filteredCommunities:'.json_encode($filteredCommunities));
+        // Log::info('$likedPostIds:'.json_encode($likedPostIds));
+
+        Log::info('ここ:at_before_$this->postService->attachLikeStatusToPosts');
+        $this->postService->attachLikeStatusToPosts($filteredPosts, $likedPostIds);
+
+        return response()->json($filteredPosts);
+        // return view('post.components.componentForIndex', compact('filteredPosts', 'filteredCommunities'));
+    }
 
 ///旧index
     // public function index(Request $request)
