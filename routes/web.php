@@ -85,6 +85,11 @@ Route::get('/test-notifications', function (){
     return 'Notification Sent';
 });
 
+
+// Route::get('/random', function getNullableString(): ?string {
+//         return (rand(0, 1) == 1) ? 'Hello' : null;
+//     });
+
 Route::get('comment/{comment}/reply/create', [CommentController::class, 'replyCreate'])->name('comment.reply.create');
 Route::post('comment/{comment}/reply/store', [CommentController::class, 'replyStore'])->name('comment.reply.store');
 

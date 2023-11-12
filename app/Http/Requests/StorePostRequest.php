@@ -26,7 +26,7 @@ class StorePostRequest extends FormRequest
             'image' => 'nullable | max:2048 | mimes:jpg,jpeg,png,gif',
             'latitude' => 'nullable | numeric',
             'longitude' => 'nullable | numeric',
-            'tag' => 'required | exists:tags,id',
+            'tag' => 'nullable | exists:tags,id',
             'location_name' => 'nullable',
             'parent_id' => 'nullable',
         ];

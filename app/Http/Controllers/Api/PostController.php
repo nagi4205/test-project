@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
+
 
 // notificationResponseモデル
 use App\Models\NotificationResponse;
@@ -144,13 +146,23 @@ class PostController extends Controller
     // ここから正しいindex
     public function index(Request $request)
     {
+        Log::debug('index()start:'.now());
         $filteredPosts = $this->fetchPostsBasedOnRequest($request);
 
-        // Log::info(first($filteredPosts));
+        Log::info('ここ:at_before_$request->headers:index()');
+        Log::info($request->headers);
         
         foreach($filteredPosts as $post) {
             $post->image = $post->image ? Storage::url($post->image) : null;
+
+            if ($post->user && $post->user->profile_image && !Str::startsWith($post->user->profile_image, 'http://localhost:9000')) {
+                $post->user->profile_image = Storage::url($post->user->profile_image);
+            }
+
+            $post->likedCount = $post->likedby->count();
+            Log::info($post);
         }
+
 
         // Log::info(first($filteredPosts));
 
@@ -165,6 +177,7 @@ class PostController extends Controller
 
         Log::info('ここ:at_before_$this->postService->attachLikeStatusToPosts');
         $this->postService->attachLikeStatusToPosts($filteredPosts, $likedPostIds);
+        Log::debug('index()end:'.now());
 
         return response()->json($filteredPosts);
         // return view('post.components.componentForIndex', compact('filteredPosts', 'filteredCommunities'));
@@ -256,6 +269,7 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
+        Log::info("dogcatpanda");
         $validated = $request->validated();
 
         if (isset($validated['parent_id'])) {
@@ -311,9 +325,10 @@ class PostController extends Controller
         $validated['user_id'] = auth()->id();
 
         $post = Post::create($validated);
-        $post->tags()->attach($request->tag);
+        // $post->tags()->attach($request->tag);
 
-        return back()->with('message', '投稿を保存しました！');
+        return response()->json(['message' => '投稿を保存しました！', 'post' => $post], 200);
+    
     }
 
     public function show($id)
@@ -325,15 +340,6 @@ class PostController extends Controller
         return view('post.show', compact('post'));
     }
 
-    public function edit(Post $post)
-    {
-        $user = Auth::user();
-        if($user->id !== $post->user_id) {
-            abort(403, 'Unauthorized action.');
-        }
-        return view('post.edit', compact('post'));
-    }
-
     public function update(UpdatePostRequest $request, Post $post)
     {
         $validated = $request->validated();
@@ -342,8 +348,7 @@ class PostController extends Controller
 
         $post->update($validated);
 
-        $request->session()->flash('message', '更新しました！');
-        return back();
+        return response()->json(['message' => '更新しました！', 'status' => 'success'], 201);
     }
 
     public function destroy(Request $request, Post $post)
@@ -353,9 +358,11 @@ class PostController extends Controller
         DB::transaction(function () use ($request, $post) {
             $post->comments()->delete();
             $post->delete();
-            $request->session()->flash('message', '削除しました！');
         });
     
-        return redirect()->route('posts.index');
+        return response()->json([
+            'status' => 'success',
+            'message' => '削除しました！'
+        ]);
     }
 }

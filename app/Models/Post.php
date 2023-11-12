@@ -3,12 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\PostPresenter;
 
+//↓消す
+use Illuminate\Support\Facades\Log;
+
+
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUlids;
 
     protected $fillable = [
         'title',
@@ -60,6 +65,7 @@ class Post extends Model
     // }
 
     public function scopeWithinEasyDistance($query, $lat, $lng, $radius = 3) {
+        Log::debug('Post.php scopeWithinEasyDistance::start'.now());
         $latDelta = $radius / 111; // 地球上で1度の緯度はおおよそ111km
         $lngDelta = $radius / (111 * cos(deg2rad($lat))); // 経度の変化は緯度に依存
     
@@ -70,6 +76,7 @@ class Post extends Model
     
         $query->whereBetween('latitude', [$minLat, $maxLat])
               ->whereBetween('longitude', [$minLng, $maxLng]);
+        Log::debug('Post.php scopeWithinEasyDistance::end'.now());
     }
 
     public function getFormattedCreatedAtAttribute() {
