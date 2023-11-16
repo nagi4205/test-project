@@ -22,6 +22,8 @@ use App\Models\Notification;
 // あとでけす
 use App\Models\User;
 use App\Models\Post;
+//あとで消す
+use App\Events\TaskAdded;
 // use App\Notifications\AttendanceConfirmation;
 // use Illuminate\Notifications\Notification;
 use App\Notifications\AttendanceComfirmNotification;
@@ -85,6 +87,11 @@ Route::get('/test-notifications', function (){
     return 'Notification Sent';
 });
 
+// Event
+Route::get('/task', function () {
+    $task = ['id' => 1, 'name' => 'メールの確認'];
+    event(new TaskAdded($task));
+});
 
 // Route::get('/random', function getNullableString(): ?string {
 //         return (rand(0, 1) == 1) ? 'Hello' : null;

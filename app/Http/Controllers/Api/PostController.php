@@ -155,8 +155,16 @@ class PostController extends Controller
         foreach($filteredPosts as $post) {
             $post->image = $post->image ? Storage::url($post->image) : null;
 
+            // user プロパティの内容を author にコピー
+
+
             if ($post->user && $post->user->profile_image && !Str::startsWith($post->user->profile_image, 'http://localhost:9000')) {
                 $post->user->profile_image = Storage::url($post->user->profile_image);
+            }
+
+            if ($post->user) {
+                $post->author = $post->user;
+                unset($post->user); // 元の user プロパティは削除
             }
 
             $post->likedCount = $post->likedby->count();
@@ -178,6 +186,8 @@ class PostController extends Controller
         Log::info('ここ:at_before_$this->postService->attachLikeStatusToPosts');
         $this->postService->attachLikeStatusToPosts($filteredPosts, $likedPostIds);
         Log::debug('index()end:'.now());
+
+
 
         return response()->json($filteredPosts);
         // return view('post.components.componentForIndex', compact('filteredPosts', 'filteredCommunities'));
@@ -331,13 +341,15 @@ class PostController extends Controller
     
     }
 
-    public function show($id)
+    public function show(Post $post)
     {
-        $post = Post::with(['comments' => function ($query) {
-            $query->whereNull('parent_id');
-        }, 'comments.children'])->find($id);
 
-        return view('post.show', compact('post'));
+        $post->load('user');
+        
+        Log::info($post);
+
+
+        return $post ? response()->json($post) : response()->json(['Post not found'], 404);
     }
 
     public function update(UpdatePostRequest $request, Post $post)
