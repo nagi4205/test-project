@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
 use App\Models\Follow;
 use App\Models\User;
-use App\Notifications\NewFollowRequestNotification;
+use App\Notifications\FollowRequestNotification;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -29,9 +29,10 @@ class SendFollowRequestNotificationJob implements ShouldQueue
 
     public function handle(): void
     {
+        Log::info('ジョブが実行されています。');
         $followee = User::find($this->followeeId);
         $follower = User::find($this->followerId);
         
-        $followee->notify(new NewFollowRequestNotification($follower));
+        $followee->notify(new FollowRequestNotification($follower));
     }
 }

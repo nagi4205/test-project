@@ -5,15 +5,16 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Api\AuthenticatedSessionController;
-use App\Http\Controllers\Api\FollowResponseController;
 use App\Http\Controllers\Api\RegisteredUserController;
-use App\Http\Controllers\Api\FollowController;
+use App\Http\Controllers\Api\FollowResponseController;
+use App\Http\Controllers\Api\FollowRequestController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\FollowController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\LikeController;
-use App\Http\Controllers\TestApiController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\TestApiController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -73,11 +74,12 @@ Route::get('posts/{post}', [PostController::class, 'show']);
 Route::delete('posts/{post}', [PostController::class, 'destroy']);
 Route::put('posts/{post}', [PostController::class, 'update']);
 
-Route::post('follows', [FollowController::class, 'store']);
+Route::post('follow_requests', [FollowRequestController::class, 'store']);
+Route::post('follow_responses', [FollowResponseController::class, 'store']);
+Route::delete('/follows/{follow}', [FollowController::class, 'destroy']);
 
 Route::get('users/{user}', [UserController::class, 'show']);
 
-Route::post('follow_responses', [FollowResponseController::class, 'store']);
 
 Route::get('/notifications', [NotificationController::class, 'index'])->name('notification.index');
 

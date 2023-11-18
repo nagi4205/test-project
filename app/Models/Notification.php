@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Notifications\LikedPostNotification;
-use App\Notifications\NewFollowRequestNotification;
+use App\Notifications\FollowRequestNotification;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Log;
 
@@ -30,7 +30,7 @@ class Notification extends Model
         $renderedNotifications = [];
         $viewMap = [
             LikedPostNotification::class => 'notifications.partials.likedPost',
-            NewFollowRequestNotification::class => 'notifications.partials.followRequest',
+            FollowRequestNotification::class => 'notifications.partials.followRequest',
         ];
 
         foreach ($notifications as $notification) {

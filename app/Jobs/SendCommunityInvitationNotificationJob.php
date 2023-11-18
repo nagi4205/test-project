@@ -5,7 +5,6 @@ namespace App\Jobs;
 use App\Models\User;
 use App\Models\Community;
 use App\Notifications\CommunityInvitationNotification;
-// use App\Notifications\NewFollowRequestNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;

@@ -16,7 +16,7 @@ class NotificationController extends Controller
         $user = Auth::user();
 
         Log::info($user);
-        $notifications = $user->notifications()->orderBy('created_at', 'desc')->get();
+        $notifications = $user->unreadNotifications()->orderBy('created_at', 'desc')->get();
 
         // $multipliedNotifications = $notifications->map(function ($notification) {
         //     $notificationData = json_decode($notification->data, true);
